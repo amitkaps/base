@@ -23,8 +23,8 @@
 	];
 </script>
 
-<h1>SvelteKit Starter</h1>
-<p>An opinionated, kept-current base for SvelteKit on Cloudflare. Start here:</p>
+<h1>base</h1>
+<p>An opinionated, kept-current SvelteKit + Cloudflare starter. Start here:</p>
 
 <div class="cards">
 	{#each docs as doc (doc.slug)}

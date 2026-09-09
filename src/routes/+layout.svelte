@@ -7,12 +7,13 @@
 </script>
 
 <svelte:head>
+	<title>base</title>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
 <div class="shell">
 	<header>
-		<a href="/" class="brand">SvelteKit Starter</a>
+		<a href="/" class="brand">base</a>
 		<nav>
 			{#each docs as doc (doc.slug)}
 				<a href="/{doc.slug}">{doc.title}</a>
@@ -24,7 +25,10 @@
 		{@render children()}
 	</main>
 
-	<footer>Built with SvelteKit · Vite+ · Cloudflare</footer>
+	<footer>
+		<span>SvelteKit · Vite+ · Cloudflare</span>
+		<a href="https://github.com/amitkaps/base">github.com/amitkaps/base</a>
+	</footer>
 </div>
 
 <style>
@@ -62,6 +66,10 @@
 	}
 
 	footer {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1rem;
+		justify-content: space-between;
 		padding-top: 1.5rem;
 		border-top: 1px solid var(--border);
 		color: var(--text-muted);

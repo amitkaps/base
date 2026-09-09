@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.doc.title}</title>
+	<title>{data.doc.title} · base</title>
 	<meta name="description" content={data.doc.summary} />
 </svelte:head>
 

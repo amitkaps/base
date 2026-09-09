@@ -1,6 +1,6 @@
-# SvelteKit Starter
+# base
 
-An opinionated, kept-current base for SvelteKit apps deployed to Cloudflare
+An opinionated, kept-current starter for SvelteKit apps deployed to Cloudflare
 Workers — SvelteKit 3 + Vite+ + Zod + Bits UI + plain CSS.
 
 ```sh

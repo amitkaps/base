@@ -29,7 +29,21 @@ pnpm exec wrangler login
 pnpm deploy
 ```
 
-## 3. Branch protection + PR workflow
+The Worker is reachable at `<name>.<your-subdomain>.workers.dev`.
+
+## 3. Custom domain
+
+`wrangler.jsonc` has a `routes` entry mapping the Worker to a hostname. Point it
+at your domain (the zone must be on the same Cloudflare account) — Cloudflare
+creates the DNS record and certificate on the next deploy:
+
+```jsonc
+"routes": [{ "pattern": "app.example.com", "custom_domain": true }]
+```
+
+Remove the entry to deploy to `workers.dev` only.
+
+## 4. Branch protection + PR workflow
 
 Requires the [`gh`](https://cli.github.com) CLI, authenticated.
 
@@ -59,7 +73,7 @@ gh api -X PATCH "repos/$OWNER_REPO" \
 Raise `required_approving_review_count` to `1` once more than one person works
 on the repo.
 
-## 4. Tighten the supply chain
+## 5. Tighten the supply chain
 
 For real projects, set a cooldown in `pnpm-workspace.yaml` so freshly published
 versions are held back:
