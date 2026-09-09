@@ -1,0 +1,69 @@
+# One-time setup
+
+Steps to run once when you turn this starter into a real project. Everything
+else is already wired.
+
+## 1. Rename the project
+
+- `package.json` → `name`
+- `wrangler.jsonc` → `name` (this becomes the Workers subdomain)
+
+## 2. Cloudflare
+
+1. Create an API token at
+   <https://dash.cloudflare.com/profile/api-tokens> using the **Edit Cloudflare
+   Workers** template.
+2. Grab your **Account ID** from any zone's overview page (or `wrangler whoami`).
+3. Add both as GitHub Actions secrets (repo → Settings → Secrets and variables →
+   Actions):
+   - `CLOUDFLARE_API_TOKEN`
+   - `CLOUDFLARE_ACCOUNT_ID`
+4. Optional — a `production` environment (repo → Settings → Environments) lets
+   you require approval before deploys. The `deploy` job already targets it.
+
+First manual deploy, if you want one before merging:
+
+```sh
+pnpm dlx wrangler login
+pnpm deploy
+```
+
+## 3. Branch protection + PR workflow
+
+Requires the [`gh`](https://cli.github.com) CLI, authenticated.
+
+```sh
+OWNER_REPO="your-org/your-repo"
+
+# Require the CI check + a PR before merging to main
+gh api -X PUT "repos/$OWNER_REPO/branches/main/protection" \
+  --input - <<'JSON'
+{
+  "required_status_checks": { "strict": true, "contexts": ["ci"] },
+  "enforce_admins": true,
+  "required_pull_request_reviews": { "required_approving_review_count": 0 },
+  "restrictions": null,
+  "allow_force_pushes": false,
+  "allow_deletions": false
+}
+JSON
+
+# Merge hygiene
+gh api -X PATCH "repos/$OWNER_REPO" \
+  -F allow_squash_merge=true \
+  -F allow_merge_commit=false \
+  -F allow_rebase_merge=false \
+  -F delete_branch_on_merge=true
+```
+
+Raise `required_approving_review_count` to `1` once more than one person works on
+the repo.
+
+## 4. Tighten the supply chain (recommended for real projects)
+
+In `pnpm-workspace.yaml` set a cooldown so freshly published versions are held
+back:
+
+```yaml
+minimumReleaseAge: 1440 # minutes (24h)
+```

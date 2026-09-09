@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v2
+        with:
+          # Installs the node + pnpm versions pinned in mise.toml.
+          cache: true
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Format, lint, typecheck (vp check)
+        run: pnpm check
+
+      - name: Svelte diagnostics
+        run: pnpm check:svelte
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build (Cloudflare adapter)
+        run: pnpm build
+
+  deploy:
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v2
+        with:
+          cache: true
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
