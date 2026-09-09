@@ -10,9 +10,15 @@ allowBuilds:
   esbuild: true
   workerd: true
 
-# `vite` is aliased to @voidzero-dev/vite-plus-core (versioned 0.3.x, but it *is*
-# Vite 8), and bits-ui's `runed` still lists a SvelteKit 2 peer while we run
-# SvelteKit 3 RC. Both are known-good; silence the peer-range noise.
+# Collapse every `vite` in the tree (SvelteKit's peers included) onto Vite+'s
+# core build, so there is exactly one Vite. `vite` also stays in
+# devDependencies as an alias to the same target — pnpm wants the direct edge.
+overrides:
+  'vite@*': 'npm:@voidzero-dev/vite-plus-core@0.3.1'
+
+# The alias above makes `vite` report version 0.3.x (it *is* Vite 8), and
+# bits-ui's `runed` still lists a SvelteKit 2 peer while we run SvelteKit 3 RC.
+# Both are known-good; silence the peer-range noise.
 peerDependencyRules:
   allowedVersions:
     vite: '*'

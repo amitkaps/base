@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '#lib/assets/favicon.svg';
+	import { docs } from '#lib';
 
 	let { children } = $props();
 </script>
@@ -13,8 +14,9 @@
 	<header>
 		<a href="/" class="brand">SvelteKit Starter</a>
 		<nav>
-			<a href="/">Home</a>
-			<a href="/blog">Blog</a>
+			{#each docs as doc (doc.slug)}
+				<a href="/{doc.slug}">{doc.title}</a>
+			{/each}
 		</nav>
 	</header>
 

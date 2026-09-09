@@ -1,0 +1,75 @@
+# Lessons
+
+What it actually took to wire SvelteKit 3 RC + Vite+ + Cloudflare together.
+Useful if you're extending this — human or agent.
+
+## SvelteKit 3 (RC)
+
+- **No `svelte.config.js`.** Adapter and compiler options are passed inline to
+  `sveltekit()` in `vite.config.ts`.
+- **`$lib` is gone** — it's `#lib`, a `package.json` `imports` subpath. An
+  extensionless `#lib/thing` doesn't resolve inside `.svelte` files, so re-export
+  everything through a `src/lib/index.ts` barrel and import `#lib`. Components and
+  assets (which have extensions) can be imported directly: `#lib/components/X.svelte`.
+- **`$app/tsconfig` is virtual** — `svelte-kit sync` writes it to
+  `node_modules/$app/tsconfig.json`. Anything that reads `tsconfig.json` outside
+  the Vite pipeline (`vp check`, `svelte-check`) needs a `svelte-kit sync` first,
+  hence `"check": "svelte-kit sync && vp check"`.
+- The whole site is static, so `src/routes/+layout.ts` just does
+  `export const prerender = true`.
+
+## Vite+
+
+- **No global `vp` needed.** It's a dev dependency; the `package.json` scripts
+  call it and pnpm resolves it from `node_modules/.bin`, so teammates only need
+  Node and pnpm. (VoidZero's own templates assume a global `vp` — that also
+  works, it's just not required.)
+- **Config lives in `vite.config.ts`**, in `fmt` / `lint` / `test` / `check`
+  blocks — not `.oxfmtrc` / `.oxlintrc`. Use `defineConfig` from `vite-plus`.
+- **Deduplicate Vite.** SvelteKit's peers pull a real `vite`, while Vite+ wants
+  `@voidzero-dev/vite-plus-core`. Left alone you get two. Fix: a
+  `pnpm-workspace.yaml` override — `'vite@*': 'npm:@voidzero-dev/vite-plus-core@<v>'` —
+  plus keep `vite` as a dev dependency alias so pnpm has the edge. This is what
+  `vp migrate` does.
+- **Tests import from `vite-plus/test`**, not `vitest` (not a direct dep) and not
+  `@voidzero-dev/vite-plus-test` (removed in 0.3.x). You can drop the `vitest`
+  dependency entirely.
+- **`vp check` runs the tools directly**, not through Vite — so it won't run
+  `svelte-kit sync` for you.
+- **Guard the SvelteKit plugin out of Vitest** (`process.env.VITEST`) or you hit
+  "The configured Vite SSR environment must be a RunnableDevEnvironment".
+
+## pnpm 12
+
+- Settings moved from `.npmrc` / `package.json#pnpm` to `pnpm-workspace.yaml`.
+- `onlyBuiltDependencies` is now an `allowBuilds:` map (`esbuild: true`, …).
+- `minimumReleaseAge` blocks packages published in the last N minutes — a
+  supply-chain guard. Set `0` to track newest; a real project wants `1440`+.
+- On an Intel Mac, mise can't install pnpm 12 from the default (aqua) backend —
+  no `darwin-x64` build. Use `"github:pnpm/pnpm"`.
+
+## Content
+
+- Chose `import.meta.glob('/src/content/*.md', { query: '?raw', eager: true })` +
+  `marked` + a `/^#\s+(.+)$/m` title regex over Content Collections: no config
+  file, no codegen step, no sync ordering. ~30 lines in `src/lib/docs.ts`.
+- These docs carry **no frontmatter** — the title comes from the H1, and nav
+  order + card copy live in one `NAV` array. So the same file reads cleanly on
+  GitHub and renders on the site.
+- If you do want frontmatter: `gray-matter` pulls a transitive direct `eval`
+  (Rolldown warns). Use `js-yaml`'s `load` on the `---` block yourself instead.
+- Rendering happens at build time (pages are prerendered), so `marked` never
+  reaches the client or the Worker.
+
+## Cloudflare
+
+- `@sveltejs/adapter-cloudflare` writes `.svelte-kit/cloudflare`; `wrangler.jsonc`
+  `main` + `assets.directory` point there.
+- `worker-configuration.d.ts` (from `wrangler types`) is committed so `vp check`
+  is self-contained — re-run `pnpm gen` after editing `wrangler.jsonc`.
+
+## CI
+
+- `pnpm/action-setup` + `actions/setup-node` (`node-version-file: .node-version`,
+  `cache: pnpm`) is all the setup needed. Every step runs through `pnpm run …`,
+  so no global tooling in CI either.

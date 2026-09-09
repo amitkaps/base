@@ -1,30 +1,31 @@
-# One-time setup
+# Setup
 
-Steps to run once when you turn this starter into a real project. Everything
-else is already wired.
+One-time steps to turn this starter into a real project. Everything else is
+already wired.
 
-## 1. Rename the project
+## 1. Rename
 
 - `package.json` → `name`
 - `wrangler.jsonc` → `name` (this becomes the Workers subdomain)
+- this file and `stack.md` / `lessons.md` — make them yours
 
 ## 2. Cloudflare
 
 1. Create an API token at
-   <https://dash.cloudflare.com/profile/api-tokens> using the **Edit Cloudflare
+   <https://dash.cloudflare.com/profile/api-tokens> with the **Edit Cloudflare
    Workers** template.
-2. Grab your **Account ID** from any zone's overview page (or `wrangler whoami`).
+2. Get your **Account ID** from any zone's overview page (or `wrangler whoami`).
 3. Add both as GitHub Actions secrets (repo → Settings → Secrets and variables →
    Actions):
    - `CLOUDFLARE_API_TOKEN`
    - `CLOUDFLARE_ACCOUNT_ID`
-4. Optional — a `production` environment (repo → Settings → Environments) lets
-   you require approval before deploys. The `deploy` job already targets it.
+4. Optional: a `production` environment (Settings → Environments) lets you
+   require approval before deploys. The `deploy` job already targets it.
 
 First manual deploy, if you want one before merging:
 
 ```sh
-vp exec wrangler login
+pnpm exec wrangler login
 pnpm deploy
 ```
 
@@ -36,8 +37,7 @@ Requires the [`gh`](https://cli.github.com) CLI, authenticated.
 OWNER_REPO="your-org/your-repo"
 
 # Require the CI check + a PR before merging to main
-gh api -X PUT "repos/$OWNER_REPO/branches/main/protection" \
-  --input - <<'JSON'
+gh api -X PUT "repos/$OWNER_REPO/branches/main/protection" --input - <<'JSON'
 {
   "required_status_checks": { "strict": true, "contexts": ["ci"] },
   "enforce_admins": true,
@@ -56,13 +56,13 @@ gh api -X PATCH "repos/$OWNER_REPO" \
   -F delete_branch_on_merge=true
 ```
 
-Raise `required_approving_review_count` to `1` once more than one person works on
-the repo.
+Raise `required_approving_review_count` to `1` once more than one person works
+on the repo.
 
-## 4. Tighten the supply chain (recommended for real projects)
+## 4. Tighten the supply chain
 
-In `pnpm-workspace.yaml` set a cooldown so freshly published versions are held
-back:
+For real projects, set a cooldown in `pnpm-workspace.yaml` so freshly published
+versions are held back:
 
 ```yaml
 minimumReleaseAge: 1440 # minutes (24h)

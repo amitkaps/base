@@ -18,14 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      # Installs Vite+, the Node version from package.json, and pnpm.
-      # Replaces setup-node + pnpm/action-setup + dependency caching.
-      - uses: voidzero-dev/setup-vp@v1.19.0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
-          cache: true
+          node-version-file: .node-version
+          cache: pnpm
 
-      - run: vp install
+      - run: pnpm install --frozen-lockfile
 
       - name: Format, lint, typecheck
         run: pnpm run check
@@ -34,10 +33,10 @@ jobs:
         run: pnpm run check:svelte
 
       - name: Unit tests
-        run: vp test --run
+        run: pnpm test
 
       - name: Build (Cloudflare adapter)
-        run: vp build
+        run: pnpm build
 
   deploy:
     needs: ci
@@ -49,13 +48,14 @@ jobs:
       deployments: write
     steps:
       - uses: actions/checkout@v4
-
-      - uses: voidzero-dev/setup-vp@v1.19.0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
-          cache: true
+          node-version-file: .node-version
+          cache: pnpm
 
-      - run: vp install
-      - run: vp build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v4
