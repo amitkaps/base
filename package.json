@@ -13,7 +13,7 @@
 		"preview": "vp preview",
 		"check": "svelte-kit sync && vp check",
 		"check:fix": "svelte-kit sync && vp check --fix",
-		"check:svelte": "svelte-kit sync && node scripts/clean.mjs && svelte-check --tsconfig ./tsconfig.json",
+		"check:svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:svelte:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vp test --run",
 		"test:watch": "vp test",
