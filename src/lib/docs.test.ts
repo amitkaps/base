@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vite-plus/test';
 import { docs, getDoc } from './docs';
 
 describe('docs', () => {
-	it('loads the three content files in nav order', () => {
-		expect(docs.map((d) => d.slug)).toEqual(['stack', 'setup', 'lessons']);
+	it('loads the content files in nav order', () => {
+		expect(docs.map((d) => d.slug)).toEqual(['stack', 'setup', 'upgrade', 'lessons']);
 	});
 
 	it('derives the title from each file’s H1', () => {
