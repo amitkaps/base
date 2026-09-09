@@ -15,6 +15,10 @@ const NAV = [
 	{ slug: 'stack', summary: 'Every piece in the starter, and why it was chosen.' },
 	{ slug: 'setup', summary: 'Make it yours: Cloudflare, secrets, branch protection.' },
 	{
+		slug: 'upgrade',
+		summary: 'Keep a fork current: Dependabot, manual bumps, re-syncing with upstream.'
+	},
+	{
 		slug: 'lessons',
 		summary: 'SvelteKit 3 + Vite+ gotchas found building this — for humans and agents.'
 	}

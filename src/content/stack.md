@@ -51,7 +51,7 @@ is the separate component pass. Oxfmt _does_ format `.svelte`.
 ```
 src/
   app.css                  design tokens + reset (light/dark)
-  content/*.md              these three docs — the content demo
+  content/*.md              these four docs — the content demo
   lib/
     docs.ts                 glob + marked + Zod — loads src/content, unit-tested
     components/             Bits UI wrappers, scoped plain CSS

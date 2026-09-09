@@ -81,3 +81,8 @@ versions are held back:
 ```yaml
 minimumReleaseAge: 1440 # minutes (24h)
 ```
+
+---
+
+That's the one-time setup. See `upgrade.md` (`/upgrade`) for keeping the fork
+current afterwards.
