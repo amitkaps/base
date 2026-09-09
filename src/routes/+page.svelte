@@ -9,11 +9,11 @@
 			title: 'Vite+ (oxlint · oxfmt · vitest · tsc)',
 			content: 'One `vp check` runs format, lint, and type checks.'
 		},
-		{ value: 'zod', title: 'Zod', content: 'Schema validation, reused by Content Collections.' },
+		{ value: 'zod', title: 'Zod', content: 'Schema validation for forms and frontmatter.' },
 		{
-			value: 'cc',
-			title: 'Content Collections',
-			content: 'Type-safe markdown, imported from `content-collections`.'
+			value: 'content',
+			title: 'Markdown blog',
+			content: 'import.meta.glob + gray-matter + marked, validated with Zod. No config.'
 		},
 		{
 			value: 'bits',

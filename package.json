@@ -5,35 +5,30 @@
 	"type": "module",
 	"imports": {
 		"#lib": "./src/lib/index.js",
-		"#lib/*": "./src/lib/*",
-		"#content": "./.content-collections/generated/index.js"
+		"#lib/*": "./src/lib/*"
 	},
 	"scripts": {
 		"dev": "vp dev",
-		"build": "pnpm sync && vp build",
-		"preview": "wrangler dev .svelte-kit/cloudflare/_worker.js --port 4173",
-		"clean": "node scripts/clean.mjs",
-		"sync": "pnpm clean && svelte-kit sync && wrangler types && content-collections build",
-		"prepare": "svelte-kit sync || echo ''",
-		"check": "pnpm sync && vp check",
-		"check:fix": "pnpm sync && vp check --fix",
-		"check:svelte": "pnpm sync && svelte-check --tsconfig ./tsconfig.json",
+		"build": "vp build",
+		"preview": "vp preview",
+		"check": "svelte-kit sync && vp check",
+		"check:fix": "svelte-kit sync && vp check --fix",
+		"check:svelte": "svelte-kit sync && node scripts/clean.mjs && svelte-check --tsconfig ./tsconfig.json",
 		"check:svelte:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vp test --run",
 		"test:watch": "vp test",
-		"deploy": "pnpm build && wrangler deploy",
-		"gen": "wrangler types"
+		"prepare": "svelte-kit sync",
+		"gen": "wrangler types",
+		"deploy": "vp build && wrangler deploy"
 	},
 	"dependencies": {
 		"bits-ui": "^2.19.1",
+		"js-yaml": "^5.4.1",
+		"marked": "^18.0.12",
 		"zod": "^4.5.4"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^5.20260908.1",
-		"@content-collections/cli": "^0.1.9",
-		"@content-collections/core": "^0.15.2",
-		"@content-collections/markdown": "^0.1.4",
-		"@content-collections/vite": "^0.3.0",
 		"@sveltejs/adapter-cloudflare": "^8.0.0-next.6",
 		"@sveltejs/kit": "^3.0.0-next.0",
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
@@ -43,8 +38,14 @@
 		"typescript": "^6.0.3",
 		"vite": "npm:@voidzero-dev/vite-plus-core@0.3.1",
 		"vite-plus": "0.3.1",
-		"vitest": "^4.1.8",
 		"wrangler": "^4.97.0"
+	},
+	"devEngines": {
+		"runtime": {
+			"name": "node",
+			"version": ">=24",
+			"onFail": "error"
+		}
 	},
 	"engines": {
 		"node": ">=24"

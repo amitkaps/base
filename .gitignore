@@ -7,10 +7,6 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
-/.content-collections
-
-# mise
-/.mise.local.toml
 
 # Vite+
 /.vite

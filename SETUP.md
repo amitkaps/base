@@ -24,7 +24,7 @@ else is already wired.
 First manual deploy, if you want one before merging:
 
 ```sh
-pnpm dlx wrangler login
+vp exec wrangler login
 pnpm deploy
 ```
 

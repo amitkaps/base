@@ -9,11 +9,12 @@ tags:
 
 # Hello World
 
-This markdown file is parsed and validated at build time by **Content Collections**
-using the Zod schema in `content-collections.ts`. Import it anywhere with:
+This markdown file is loaded at build time by `src/lib/posts.ts` — a ~25-line
+`import.meta.glob` that reads every `.md`, parses frontmatter with `gray-matter`,
+validates it against a Zod schema, and renders the body with `marked`.
 
 ```ts
-import { allPosts } from '#content';
+import { publishedPosts } from '#lib';
 ```
 
-Everything is fully typed — `title`, `date`, `tags`, and the compiled `content`.
+`publishedPosts` is fully typed and drafts are filtered out.

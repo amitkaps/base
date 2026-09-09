@@ -13,8 +13,7 @@
 	<a href="/blog">← Back to blog</a>
 	<h1>{data.post.title}</h1>
 	<p class="meta">{formatDate(data.post.date)}</p>
-	<!-- html is produced at build time by @content-collections/markdown -->
-	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	<!-- html is produced at build time from trusted local markdown (src/lib/posts.ts) -->
 	{@html data.post.html}
 </article>
 

@@ -6,7 +6,6 @@ updates:
       interval: weekly
     versioning-strategy: increase
     groups:
-      # One PR for the whole toolchain so the RC/beta pieces move together.
       sveltekit:
         patterns:
           - '@sveltejs/*'
@@ -16,10 +15,6 @@ updates:
         patterns:
           - vite
           - vite-plus
-          - vitest
-      content-collections:
-        patterns:
-          - '@content-collections/*'
       minor-and-patch:
         update-types:
           - minor

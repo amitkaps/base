@@ -1,7 +1,0 @@
-# Consumed by oxfmt (vp fmt) in addition to .gitignore
-.content-collections
-.svelte-kit
-build
-worker-configuration.d.ts
-pnpm-lock.yaml
-CHANGELOG.md

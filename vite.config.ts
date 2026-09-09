@@ -1,26 +1,18 @@
 import { defineConfig } from 'vite-plus';
 import adapter from '@sveltejs/adapter-cloudflare';
 import { sveltekit } from '@sveltejs/kit/vite';
-import contentCollections from '@content-collections/vite';
 
-const generated = [
-	'.svelte-kit/**',
-	'build/**',
-	'.content-collections/**',
-	'worker-configuration.d.ts'
-];
+const generated = ['.svelte-kit/**', 'build/**', 'worker-configuration.d.ts'];
 
-// In Vitest we skip both plugins: the SvelteKit plugin installs a dev-server
-// hook incompatible with the Vitest environment, and the Content Collections
-// watcher keeps the process alive. Tests cover pure modules and `#content` /
-// `#lib` (resolved via package.json "imports" against files `pnpm sync` builds).
+// The SvelteKit plugin installs a dev-server hook that is incompatible with the
+// Vitest environment. Unit tests cover pure modules plus `import.meta.glob`
+// content loading, none of which need SvelteKit.
 const inTest = !!process.env.VITEST;
 
 export default defineConfig({
 	plugins: inTest
 		? []
 		: [
-				contentCollections(),
 				sveltekit({
 					compilerOptions: {
 						// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
@@ -31,7 +23,7 @@ export default defineConfig({
 				})
 			],
 
-	// Oxfmt config for `vp fmt` / `vp check`.
+	// Oxfmt — `vp fmt` / `vp check`. Formats .ts/.js/.svelte/.css/.json.
 	fmt: {
 		useTabs: true,
 		singleQuote: true,
@@ -43,24 +35,16 @@ export default defineConfig({
 		ignorePatterns: [...generated, 'pnpm-lock.yaml', 'CHANGELOG.md']
 	},
 
-	// Oxlint config for `vp lint` / `vp check`. Lints .ts/.js only —
-	// `.svelte` type + a11y diagnostics come from `pnpm check:svelte`.
+	// Oxlint — `vp lint` / `vp check`. Lints .ts/.js only; `.svelte` type + a11y
+	// diagnostics come from `pnpm check:svelte`.
 	lint: {
 		plugins: ['typescript', 'unicorn', 'import'],
-		categories: {
-			correctness: 'error'
-		},
-		options: {
-			typeAware: true,
-			typeCheck: true
-		},
-		ignorePatterns: generated,
-		rules: {
-			// Content Collections exposes frontmatter metadata as `_meta`.
-			'no-underscore-dangle': 'off'
-		}
+		categories: { correctness: 'error' },
+		options: { typeAware: true, typeCheck: true },
+		ignorePatterns: generated
 	},
 
+	// Vitest — `vp test`.
 	test: {
 		expect: { requireAssertions: true },
 		environment: 'node',

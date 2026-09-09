@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [main]
 
-# Cancel superseded runs on the same ref.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -20,24 +19,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jdx/mise-action@v2
+      # Installs Vite+, the Node version from package.json, and pnpm.
+      # Replaces setup-node + pnpm/action-setup + dependency caching.
+      - uses: voidzero-dev/setup-vp@v1.19.0
         with:
-          # Installs the node + pnpm versions pinned in mise.toml.
           cache: true
 
-      - run: pnpm install --frozen-lockfile
+      - run: vp install
 
-      - name: Format, lint, typecheck (vp check)
-        run: pnpm check
+      - name: Format, lint, typecheck
+        run: pnpm run check
 
       - name: Svelte diagnostics
-        run: pnpm check:svelte
+        run: pnpm run check:svelte
 
       - name: Unit tests
-        run: pnpm test
+        run: vp test --run
 
       - name: Build (Cloudflare adapter)
-        run: pnpm build
+        run: vp build
 
   deploy:
     needs: ci
@@ -50,16 +50,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jdx/mise-action@v2
+      - uses: voidzero-dev/setup-vp@v1.19.0
         with:
           cache: true
 
-      - run: pnpm install --frozen-lockfile
-
-      - run: pnpm build
+      - run: vp install
+      - run: vp build
 
       - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
