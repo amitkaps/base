@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    versioning-strategy: increase
+    groups:
+      sveltekit:
+        patterns:
+          - '@sveltejs/*'
+          - svelte
+          - svelte-check
+      vite-plus:
+        patterns:
+          - vite
+          - vite-plus
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
