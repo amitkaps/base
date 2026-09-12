@@ -14,6 +14,18 @@ export default defineConfig({
 		? []
 		: [
 				sveltekit({
+					// SvelteKit 3 takes these options flat — not under a `kit` key.
+					prerender: {
+						// Prerendering follows every internal link, so a strict handler
+						// turns the build into a link checker. Add a path here only when
+						// something outside this app serves it.
+						handleHttpError: ({ path, referrer, message }) => {
+							const external: string[] = [];
+							if (external.some((prefix) => path === prefix || path.startsWith(`${prefix}/`)))
+								return;
+							throw new Error(`${message} (linked from ${referrer})`);
+						}
+					},
 					compilerOptions: {
 						// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
 						runes: ({ filename }) =>

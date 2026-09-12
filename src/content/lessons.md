@@ -7,6 +7,9 @@ Useful if you're extending this — human or agent.
 
 - **No `svelte.config.js`.** Adapter and compiler options are passed inline to
   `sveltekit()` in `vite.config.ts`.
+- **That config is flat.** Options such as `files` or `prerender` go straight
+  into `sveltekit({ ... })`. Wrapping them in a `kit` key, as in SvelteKit 2,
+  fails with "configuration no longer lives inside a `kit` namespace".
 - **`$lib` is gone** — it's `#lib`, a `package.json` `imports` subpath. An
   extensionless `#lib/thing` doesn't resolve inside `.svelte` files, so re-export
   everything through a `src/lib/index.ts` barrel and import `#lib`. Components and
@@ -15,8 +18,15 @@ Useful if you're extending this — human or agent.
   `node_modules/$app/tsconfig.json`. Anything that reads `tsconfig.json` outside
   the Vite pipeline (`vp check`, `svelte-check`) needs a `svelte-kit sync` first,
   hence the `svelte-kit sync` at the front of the `check` script.
-- The whole site is static, so `src/routes/+layout.ts` just does
-  `export const prerender = true`.
+- The whole site is static, so `src/routes/+layout.ts` does
+  `export const prerender = true` **and** `export const csr = false`. Without
+  the second, every prerendered page still ships the hydration runtime for no
+  benefit. A route with real client behaviour sets `csr = true` in its own
+  `+page.ts`.
+- **Prerendering is strict.** `handleHttpError` in `vite.config.ts` throws, so a
+  broken internal link fails the build — a link checker for free. If a path is
+  served by something other than this app, add it to the allowlist there rather
+  than loosening the handler.
 
 ## Vite+
 
@@ -35,6 +45,9 @@ Useful if you're extending this — human or agent.
   dependency entirely.
 - **`vp check` runs the tools directly**, not through Vite — so it won't run
   `svelte-kit sync` for you.
+- **An empty test suite fails.** `vp test` exits 1 when it finds no test
+  files, so a fork that removes the tests breaks CI until it adds one back (or
+  sets `passWithNoTests` while it has none).
 - **Guard the SvelteKit plugin out of Vitest** (`process.env.VITEST`) or you hit
   "The configured Vite SSR environment must be a RunnableDevEnvironment".
 
@@ -67,6 +80,19 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
   (Rolldown warns). Use `js-yaml`'s `load` on the `---` block yourself instead.
 - Rendering happens at build time (pages are prerendered), so `marked` never
   reaches the client or the Worker.
+- **`marked` adds no heading ids**, so `#section` links resolve to nothing and
+  nobody notices. `src/lib/docs.ts` adds a heading renderer that slugs each
+  heading and keeps ids unique per page.
+- **`Marked` is a top-level export.** Use `import { Marked } from 'marked'` and
+  `new Marked()` when you need an instance with extensions; `new marked.Marked()`
+  is not a constructor.
+- **With frontmatter, empty values arrive as `null`.** A key written with
+  nothing after it (`image:`) parses to `null`, and Zod's `.optional()` rejects
+  `null`. Drop null keys before validating, or use `.nullish()`.
+- **Typographic extensions should work on tokens, not finished HTML.**
+  Post-processing the rendered string (as `marked-smartypants` does) also
+  rewrites raw HTML blocks, where `--` or straight quotes may be meaningful. A
+  `walkTokens` pass over `text` tokens leaves code and raw HTML untouched.
 
 ## Cloudflare
 

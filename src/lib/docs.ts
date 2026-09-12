@@ -1,4 +1,4 @@
-import { marked } from 'marked';
+import { Marked, type RendererObject, type Tokens } from 'marked';
 import { z } from 'zod';
 
 // Eager glob: every doc is read and rendered at build time. The pages are
@@ -24,6 +24,35 @@ const NAV = [
 	}
 ] as const;
 
+/** Slugify heading text into an id: lowercase, punctuation dropped, spaces to
+ *  hyphens. marked adds no ids of its own, so without this `#section` links
+ *  fail silently. */
+function headingId(text: string): string {
+	const slug = text
+		.replace(/<[^>]+>/g, '')
+		.replace(/&[a-z]+;|&#\d+;/gi, '')
+		.toLowerCase()
+		.replace(/[^a-z0-9\s-]/g, '')
+		.trim()
+		.replace(/\s+/g, '-');
+	return /^[a-z]/.test(slug) ? slug : `section${slug ? `-${slug}` : ''}`;
+}
+
+/** A heading renderer that gives every heading a page-unique id. */
+function headingRenderer(): RendererObject {
+	const used = new Map<string, number>();
+	return {
+		heading(this: { parser: { parseInline: (tokens: Tokens.Generic[]) => string } }, token) {
+			const { depth, tokens, text } = token as Tokens.Heading;
+			const base = headingId(text);
+			const count = used.get(base) ?? 0;
+			used.set(base, count + 1);
+			const id = count === 0 ? base : `${base}-${count}`;
+			return `<h${depth} id="${id}">${this.parser.parseInline(tokens)}</h${depth}>\n`;
+		}
+	};
+}
+
 const docSchema = z.object({
 	slug: z.string(),
 	title: z.string().min(1),
@@ -32,6 +61,14 @@ const docSchema = z.object({
 });
 
 export type Doc = z.infer<typeof docSchema>;
+
+// A fresh instance per doc keeps heading-id uniqueness scoped to one page.
+// Note `Marked` is a top-level export — `new marked.Marked()` is not a constructor.
+function markdown(): Marked {
+	const instance = new Marked({ async: false, gfm: true });
+	instance.use({ renderer: headingRenderer() });
+	return instance;
+}
 
 function render({ slug, summary }: (typeof NAV)[number]): Doc {
 	const source = files[`/src/content/${slug}.md`] as string | undefined;
@@ -44,7 +81,7 @@ function render({ slug, summary }: (typeof NAV)[number]): Doc {
 		slug,
 		title,
 		summary,
-		html: marked.parse(source, { async: false, gfm: true })
+		html: markdown().parse(source, { async: false }) as string
 	});
 }
 
