@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { docs, getDoc } from './docs';
+import { docs, getDoc, renderMarkdown } from './docs';
 
 describe('docs', () => {
 	it('loads every markdown file and resolves it by slug', () => {
@@ -31,10 +31,36 @@ describe('docs', () => {
 	it('gives every heading a unique id', () => {
 		for (const doc of docs) {
 			const ids = [...doc.html.matchAll(/<h[1-6] id="([^"]+)"/g)].map((match) => match[1]);
-			expect(ids.length).toBeGreaterThan(0);
 			expect(new Set(ids).size).toBe(ids.length);
 		}
-		expect(getDoc('lessons')!.html).toContain('<h2 id="content">');
+	});
+
+	it('slugs headings in any script, GitHub-style, without collisions', () => {
+		const html = renderMarkdown(
+			[
+				'## Foo',
+				'## Foo',
+				'## Foo 1',
+				'## Café au lait',
+				'## शुरुआत करें',
+				'## 日本語の見出し',
+				'## 1. Rename',
+				'## See [docs](https://example.com)',
+				'## ???'
+			].join('\n\n')
+		);
+		const ids = [...html.matchAll(/<h2 id="([^"]+)"/g)].map((match) => match[1]);
+		expect(ids).toEqual([
+			'foo',
+			'foo-1',
+			'foo-1-1',
+			'café-au-lait',
+			'शुरुआत-करें',
+			'日本語の見出し',
+			'1-rename',
+			'see-docs',
+			'section'
+		]);
 	});
 
 	it('returns undefined for an unknown slug', () => {
