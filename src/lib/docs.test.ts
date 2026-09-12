@@ -2,23 +2,29 @@ import { describe, expect, it } from 'vite-plus/test';
 import { docs, getDoc } from './docs';
 
 describe('docs', () => {
-	it('resolves every doc in the nav', () => {
+	it('loads every markdown file and resolves it by slug', () => {
 		expect(docs.length).toBeGreaterThan(0);
 		for (const doc of docs) {
 			expect(getDoc(doc.slug)).toBe(doc);
 		}
 	});
 
-	it('derives a title from each file’s H1', () => {
+	it('takes title and summary from frontmatter', () => {
 		for (const doc of docs) {
 			expect(doc.title).toBeTruthy();
-			expect(doc.title).not.toMatch(/^#/);
+			expect(doc.summary).toBeTruthy();
 		}
 	});
 
-	it('renders markdown to HTML', () => {
+	it('orders docs by their frontmatter order', () => {
+		const orders = docs.map((doc) => doc.order);
+		expect(orders).toEqual([...orders].sort((a, b) => a - b));
+	});
+
+	it('strips frontmatter before rendering', () => {
 		for (const doc of docs) {
-			expect(doc.html).toContain('<h1');
+			expect(doc.html).not.toMatch(/^---/);
+			expect(doc.html).not.toContain('summary:');
 		}
 	});
 

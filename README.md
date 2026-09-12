@@ -12,8 +12,8 @@ pnpm dev
 Five commands are the whole interface: `dev`, `build`, `check`, `test`, `deploy`.
 
 The starter's own docs are its demo content — the markdown files under
-`src/content/`, listed in the `NAV` array in
-[`src/lib/docs.ts`](src/lib/docs.ts) and served at `/stack`, `/setup`,
+`src/content/`, each with YAML frontmatter validated in
+[`src/lib/docs.ts`](src/lib/docs.ts), served at `/stack`, `/setup`,
 `/upgrade` and `/lessons`. Start with
 [`stack.md`](src/content/stack.md) to see what's in the box, then
 [`setup.md`](src/content/setup.md) to make it yours.

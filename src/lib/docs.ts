@@ -1,28 +1,32 @@
+import { load as parseYaml } from 'js-yaml';
 import { Marked, type RendererObject, type Tokens } from 'marked';
 import { z } from 'zod';
 
 // Eager glob: every doc is read and rendered at build time. The pages are
-// prerendered, so `marked` never ships to the client or the Worker runtime.
+// prerendered, so `marked` and `js-yaml` never ship to the client or the Worker.
+// Adding a page is adding a file: the slug is the filename, and everything else
+// comes from its frontmatter.
 const files = import.meta.glob('/src/content/*.md', {
 	query: '?raw',
 	import: 'default',
 	eager: true
+}) as Record<string, string>;
+
+const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/;
+
+// Extend this schema as pages need more fields (date, image, tags...). A file
+// that does not match fails the build with its path and the offending key.
+const frontmatterSchema = z.object({
+	title: z.string().min(1),
+	summary: z.string().min(1),
+	/** Position in the nav and on the home page, ascending. */
+	order: z.number().int()
 });
 
-// The one place doc order and nav/card copy live. Add a file here + a
-// src/content/<slug>.md and it shows up in the nav and on the home page.
-const NAV = [
-	{ slug: 'stack', summary: 'Every piece in the starter, and why it was chosen.' },
-	{ slug: 'setup', summary: 'Make it yours: Cloudflare, secrets, branch protection.' },
-	{
-		slug: 'upgrade',
-		summary: 'Keep a fork current: Dependabot, manual bumps, re-syncing with upstream.'
-	},
-	{
-		slug: 'lessons',
-		summary: 'SvelteKit 3 + Vite+ gotchas found building this — for humans and agents.'
-	}
-] as const;
+export type Doc = z.infer<typeof frontmatterSchema> & {
+	slug: string;
+	html: string;
+};
 
 /** Slugify heading text into an id: lowercase, punctuation dropped, spaces to
  *  hyphens. marked adds no ids of its own, so without this `#section` links
@@ -53,15 +57,6 @@ function headingRenderer(): RendererObject {
 	};
 }
 
-const docSchema = z.object({
-	slug: z.string(),
-	title: z.string().min(1),
-	summary: z.string().min(1),
-	html: z.string()
-});
-
-export type Doc = z.infer<typeof docSchema>;
-
 // A fresh instance per doc keeps heading-id uniqueness scoped to one page.
 // Note `Marked` is a top-level export — `new marked.Marked()` is not a constructor.
 function markdown(): Marked {
@@ -70,21 +65,33 @@ function markdown(): Marked {
 	return instance;
 }
 
-function render({ slug, summary }: (typeof NAV)[number]): Doc {
-	const source = files[`/src/content/${slug}.md`] as string | undefined;
-	if (!source) throw new Error(`Missing src/content/${slug}.md`);
+function render(path: string, source: string): Doc {
+	const slug = path.slice('/src/content/'.length, -'.md'.length);
 
-	const title = /^#\s+(.+)$/m.exec(source)?.[1]?.trim();
-	if (!title) throw new Error(`src/content/${slug}.md needs an "# H1" title`);
+	const match = FRONTMATTER.exec(source);
+	if (!match) throw new Error(`${path}: missing YAML frontmatter`);
 
-	return docSchema.parse({
-		slug,
-		title,
-		summary,
-		html: markdown().parse(source, { async: false }) as string
-	});
+	// A key with nothing after it (`image:`) parses to null, which Zod's
+	// .optional() rejects. Treat it as absent.
+	const raw = (parseYaml(match[1]) ?? {}) as Record<string, unknown>;
+	for (const [key, value] of Object.entries(raw)) {
+		if (value === null || value === '') delete raw[key];
+	}
+
+	const parsed = frontmatterSchema.safeParse(raw);
+	if (!parsed.success) {
+		const issues = parsed.error.issues
+			.map((issue) => `${issue.path.join('.') || '(root)'}: ${issue.message}`)
+			.join('; ');
+		throw new Error(`${path}: invalid frontmatter — ${issues}`);
+	}
+
+	const body = source.slice(match[0].length);
+	return { ...parsed.data, slug, html: markdown().parse(body, { async: false }) as string };
 }
 
-export const docs: Doc[] = NAV.map(render);
+export const docs: Doc[] = Object.entries(files)
+	.map(([path, source]) => render(path, source))
+	.sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
 
 export const getDoc = (slug: string): Doc | undefined => docs.find((doc) => doc.slug === slug);

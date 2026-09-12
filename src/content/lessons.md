@@ -1,4 +1,8 @@
-# Lessons
+---
+title: Lessons
+summary: 'SvelteKit 3 + Vite+ gotchas found building this — for humans and agents.'
+order: 4
+---
 
 What it actually took to wire SvelteKit 3 RC + Vite+ + Cloudflare together.
 Useful if you're extending this — human or agent.
@@ -71,13 +75,16 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
 ## Content
 
 - Chose `import.meta.glob('/src/content/*.md', { query: '?raw', eager: true })` +
-  `marked` + a `/^#\s+(.+)$/m` title regex over Content Collections: no config
-  file, no codegen step, no sync ordering. ~30 lines in `src/lib/docs.ts`.
-- These docs carry **no frontmatter** — the title comes from the H1, and nav
-  order + card copy live in one `NAV` array. So the same file reads cleanly on
-  GitHub and renders on the site.
-- If you do want frontmatter: `gray-matter` pulls a transitive direct `eval`
-  (Rolldown warns). Use `js-yaml`'s `load` on the `---` block yourself instead.
+  `marked` over Content Collections: no config file, no codegen step, no sync
+  ordering. It all lives in `src/lib/docs.ts`.
+- **Each page's metadata is YAML frontmatter** — `title`, `summary`, `order` —
+  validated by a Zod schema. The slug is the filename. Adding a page is adding
+  one file, and a missing or mistyped key fails the build naming the file. This
+  is also the shape most existing markdown already has, so content from another
+  generator drops in with little rewriting; extend the schema for its fields.
+- **Parse frontmatter with `js-yaml`, not `gray-matter`.** `gray-matter` pulls a
+  transitive direct `eval` (Rolldown warns). Splitting the `---` block with a
+  regex and calling `js-yaml`'s `load` is a few lines.
 - Rendering happens at build time (pages are prerendered), so `marked` never
   reaches the client or the Worker.
 - **`marked` adds no heading ids**, so `#section` links resolve to nothing and
@@ -86,9 +93,9 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
 - **`Marked` is a top-level export.** Use `import { Marked } from 'marked'` and
   `new Marked()` when you need an instance with extensions; `new marked.Marked()`
   is not a constructor.
-- **With frontmatter, empty values arrive as `null`.** A key written with
-  nothing after it (`image:`) parses to `null`, and Zod's `.optional()` rejects
-  `null`. Drop null keys before validating, or use `.nullish()`.
+- **Empty frontmatter values arrive as `null`.** A key written with nothing
+  after it (`image:`) parses to `null`, and Zod's `.optional()` rejects `null`.
+  `src/lib/docs.ts` drops null keys before validating.
 - **Typographic extensions should work on tokens, not finished HTML.**
   Post-processing the rendered string (as `marked-smartypants` does) also
   rewrites raw HTML blocks, where `--` or straight quotes may be meaningful. A

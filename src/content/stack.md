@@ -1,4 +1,8 @@
-# Stack
+---
+title: Stack
+summary: 'Every piece in the starter, and why it was chosen.'
+order: 1
+---
 
 An opinionated, kept-current base for SvelteKit apps on Cloudflare Workers. Two
 config files carry the weight: **`vite.config.ts`** (dev + toolchain) and

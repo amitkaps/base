@@ -1,4 +1,8 @@
-# Upgrade
+---
+title: Upgrade
+summary: 'Keep a fork current: Dependabot, manual bumps, re-syncing with upstream.'
+order: 3
+---
 
 `setup.md` is one-time. This is the recurring part: keeping a fork current
 without breaking it. The stack is deliberately on the bleeding edge (SvelteKit 3
