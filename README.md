@@ -1,7 +1,7 @@
 # base
 
 An opinionated, kept-current starter for SvelteKit apps deployed to Cloudflare
-Workers — SvelteKit 3 + Vite+ + Zod + Bits UI + plain CSS.
+Workers — SvelteKit 3 + Vite+ + Zod + plain CSS.
 
 ```sh
 # needs Node 24 + pnpm 12 (mise / nvm / corepack — see package.json)
@@ -9,14 +9,13 @@ pnpm install
 pnpm dev
 ```
 
-The starter's own docs are its demo content — three markdown files under
-`src/content/`, rendered on the site and readable here:
+Five commands are the whole interface: `dev`, `build`, `check`, `test`, `deploy`.
 
-| Doc                                       | Read it                                                         |
-| ----------------------------------------- | --------------------------------------------------------------- |
-| **Stack** — every piece and why           | [`src/content/stack.md`](src/content/stack.md) · `/stack`       |
-| **Setup** — make it your project          | [`src/content/setup.md`](src/content/setup.md) · `/setup`       |
-| **Upgrade** — keep a fork current         | [`src/content/upgrade.md`](src/content/upgrade.md) · `/upgrade` |
-| **Lessons** — SvelteKit 3 + Vite+ gotchas | [`src/content/lessons.md`](src/content/lessons.md) · `/lessons` |
+The starter's own docs are its demo content — the markdown files under
+`src/content/`, listed in the `NAV` array in
+[`src/lib/docs.ts`](src/lib/docs.ts) and served at `/stack`, `/setup`,
+`/upgrade` and `/lessons`. Start with
+[`stack.md`](src/content/stack.md) to see what's in the box, then
+[`setup.md`](src/content/setup.md) to make it yours.
 
 Building on this? Start with [`AGENTS.md`](AGENTS.md).

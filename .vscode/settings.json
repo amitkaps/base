@@ -3,8 +3,5 @@
 	"editor.formatOnSave": true,
 	"[svelte]": {
 		"editor.defaultFormatter": "oxc.oxc-vscode"
-	},
-	"oxc.fmt.experimental": true,
-	"eslint.enable": false,
-	"prettier.enable": false
+	}
 }

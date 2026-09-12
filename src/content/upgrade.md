@@ -2,7 +2,7 @@
 
 `setup.md` is one-time. This is the recurring part: keeping a fork current
 without breaking it. The stack is deliberately on the bleeding edge (SvelteKit 3
-RC, Vite+ beta, `minimumReleaseAge: 0`), so bumps land often.
+RC, Vite+ beta, no release cooldown), so bumps land often.
 
 ## The rhythm
 
@@ -33,20 +33,19 @@ pnpm outdated
 pnpm up --latest <pkg>        # or edit package.json + pnpm install
 ```
 
-Keep the `vite` override in `pnpm-workspace.yaml` and the `vite` devDependency
-alias pinned to the **same** `@voidzero-dev/vite-plus-core` version — bump both
-together, or the tree splits into two Vites again (see `lessons.md`).
+The `vite` override and the `vite` devDependency alias must stay pinned to the
+same version — bump them together. `lessons.md` (`/lessons`) explains why.
 
 ## After any bump
 
 ```sh
 pnpm install
-pnpm check && pnpm check:svelte && pnpm test && pnpm build
+pnpm check && pnpm test && pnpm build
 ```
 
-- Re-run `pnpm gen` if `wrangler` moved (regenerates `worker-configuration.d.ts`).
-- Deploy happens on merge to `main`; confirm `base.<subdomain>.workers.dev` and
-  the custom domain still serve.
+`pnpm install` regenerates `worker-configuration.d.ts` via `prepare`, so a
+`wrangler` bump needs nothing extra. Deploy happens on merge to `main`; confirm
+`base.<subdomain>.workers.dev` and the custom domain still serve.
 
 ## Node & pnpm
 
@@ -72,8 +71,6 @@ New gotchas land in upstream `lessons.md` — worth re-reading after a big bump.
 
 ## Graduating off the bleeding edge
 
-Once SvelteKit 3 and Vite+ ship stable:
-
-- Raise `minimumReleaseAge` in `pnpm-workspace.yaml` to `1440`+ (24h cooldown).
-- Relax the RC version ranges in `package.json` to normal caret ranges.
-- Delete this section.
+Once SvelteKit 3 and Vite+ ship stable, relax the RC version ranges in
+`package.json` to normal caret ranges and delete this section. (The
+supply-chain cooldown is a separate call — see `setup.md` §5.)

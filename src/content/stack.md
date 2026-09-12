@@ -13,38 +13,38 @@ config files carry the weight: **`vite.config.ts`** (dev + toolchain) and
 | Language   | TypeScript                     | —                                                   |
 | Validation | Zod 4                          | Validates the parsed docs in `src/lib/docs.ts`      |
 | Content    | `import.meta.glob` + `marked`  | Markdown pages, no plugin, no codegen               |
-| UI         | Bits UI + plain CSS            | Headless primitives, tokens in `src/app.css`        |
+| Styling    | Plain CSS                      | Tokens in `src/app.css`, no framework               |
 | Deploy     | `@sveltejs/adapter-cloudflare` | Cloudflare Workers                                  |
 | CI/CD      | GitHub Actions                 | Checks on every PR, deploy on merge to `main`       |
 
-## Getting a copy running
+No UI library is bundled — add the one you want (Bits UI, Melt, your own) when
+you need it.
 
-You need **Node 24** and **pnpm 12** — via [mise](https://mise.jdx.dev), nvm,
-or Corepack. `.node-version` and `package.json` (`engines`, `packageManager`)
-declare both.
+## Five commands
+
+| Command       | Does                                                        |
+| ------------- | ----------------------------------------------------------- |
+| `pnpm dev`    | dev server on <http://localhost:5173>                       |
+| `pnpm build`  | production build for Cloudflare                             |
+| `pnpm check`  | format + lint + typecheck + `.svelte` type/a11y diagnostics |
+| `pnpm test`   | unit tests (Vitest, via `vp test`)                          |
+| `pnpm deploy` | build + `wrangler deploy` (normally left to CI)             |
+
+`pnpm check` runs two passes because Oxlint doesn't parse `.svelte`: `vp check`
+covers `.ts`/`.js`, `svelte-check` covers components. Oxfmt _does_ format
+`.svelte`. Both are behind the one command.
+
+Escape hatches, when you want them directly:
 
 ```sh
-pnpm install
-pnpm dev      # http://localhost:5173
+pnpm exec vp check --fix   # write the formatting/lint fixes
+pnpm exec vp test          # watch mode
+pnpm exec vp preview       # run the built worker locally
 ```
 
-`vp` is a dev dependency, invoked through the scripts below — no global install.
-
-## Scripts
-
-| Command             | Does                                                       |
-| ------------------- | ---------------------------------------------------------- |
-| `pnpm dev`          | dev server                                                 |
-| `pnpm build`        | production build for Cloudflare                            |
-| `pnpm preview`      | run the built worker locally                               |
-| `pnpm check`        | format + lint + typecheck (`svelte-kit sync && vp check`)  |
-| `pnpm check:svelte` | `.svelte` type / a11y / template diagnostics               |
-| `pnpm test`         | unit tests (Vitest, via `vp test`)                         |
-| `pnpm deploy`       | build + `wrangler deploy` (normally left to CI)            |
-| `pnpm gen`          | regenerate Cloudflare types after editing `wrangler.jsonc` |
-
-Oxlint doesn't parse `.svelte`, so `check` covers `.ts`/`.js` and `check:svelte`
-is the separate component pass. Oxfmt _does_ format `.svelte`.
+`prepare` (on every `pnpm install`) runs `svelte-kit sync` and `wrangler types`,
+so a fresh clone typechecks with no extra step. `worker-configuration.d.ts` is
+generated, not committed.
 
 ## Layout
 
@@ -54,9 +54,8 @@ src/
   content/*.md              these four docs — the content demo
   lib/
     docs.ts                 glob + marked + Zod — loads src/content, unit-tested
-    components/             Bits UI wrappers, scoped plain CSS
   routes/
-    +page.svelte            home — links to the docs + a Bits UI demo
+    +page.svelte            home — links to the docs
     [slug]/                 renders one doc; prerendered from docs list
 vite.config.ts             SvelteKit + Vite+ (fmt / lint / test) config
 wrangler.jsonc             Cloudflare deploy config
@@ -65,9 +64,6 @@ wrangler.jsonc             Cloudflare deploy config
 Import helpers, schemas and docs from `#lib`; components and assets directly as
 `#lib/components/X.svelte` (see `package.json` `imports`).
 
-## Tracking the bleeding edge
-
-SvelteKit 3 and Vite+ are pre-release. The lockfile pins exact versions;
-Dependabot proposes grouped bumps weekly. `pnpm-workspace.yaml` sets
-`minimumReleaseAge: 0` so fresh releases aren't held back — raise it (minutes)
-for real projects.
+SvelteKit 3 and Vite+ are pre-release, so this repo tracks their releases
+closely — see `upgrade.md` (`/upgrade`) for the rhythm, and `setup.md`
+(`/setup`) for the supply-chain settings a real project should tighten.
