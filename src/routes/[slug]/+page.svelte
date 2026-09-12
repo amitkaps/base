@@ -61,7 +61,9 @@
 	}
 
 	.doc :global(table) {
+		display: block;
 		width: 100%;
+		overflow-x: auto;
 		border-collapse: collapse;
 		margin: 1rem 0;
 		font-size: 0.9rem;
@@ -77,10 +79,5 @@
 
 	.doc :global(th) {
 		background: var(--surface-hover);
-	}
-
-	.doc :global(table) {
-		display: block;
-		overflow-x: auto;
 	}
 </style>

@@ -63,21 +63,3 @@ pre {
 	border-radius: var(--radius);
 	background: var(--surface-hover);
 }
-
-.btn {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.4rem;
-	padding: 0.5rem 0.9rem;
-	border-radius: var(--radius);
-	border: 1px solid var(--border);
-	background: var(--accent);
-	color: var(--accent-text);
-	font: inherit;
-	cursor: pointer;
-	text-decoration: none;
-}
-
-.btn:hover {
-	filter: brightness(1.05);
-}

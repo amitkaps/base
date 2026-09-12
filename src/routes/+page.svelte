@@ -1,26 +1,5 @@
 <script lang="ts">
 	import { docs } from '#lib';
-	import Dialog from '#lib/components/Dialog.svelte';
-	import Accordion from '#lib/components/Accordion.svelte';
-
-	const inside = [
-		{
-			value: 'kit',
-			title: 'SvelteKit 3 + Svelte 5',
-			content: 'App framework, runes, prerendered.'
-		},
-		{
-			value: 'vp',
-			title: 'Vite+',
-			content: 'One `vp check` = format + lint + typecheck. Vite, Vitest, Oxc bundled.'
-		},
-		{
-			value: 'content',
-			title: 'Markdown + Zod',
-			content: 'import.meta.glob + marked. These three pages are the demo.'
-		},
-		{ value: 'cf', title: 'Cloudflare adapter', content: 'Deploys to Workers from GitHub Actions.' }
-	];
 </script>
 
 <h1>base</h1>
@@ -34,19 +13,6 @@
 		</a>
 	{/each}
 </div>
-
-<hr />
-
-<h2>UI primitives</h2>
-<p>Bits UI (headless) styled with plain CSS — see <code>src/lib/components/</code>.</p>
-
-<Dialog title="It works" description="A Bits UI dialog, styled with the tokens in src/app.css.">
-	{#snippet trigger()}Open a dialog{/snippet}
-	<p>Swap the tokens in <code>src/app.css</code> to rebrand the whole site.</p>
-</Dialog>
-
-<h3>What's inside</h3>
-<Accordion items={inside} />
 
 <style>
 	.cards {
@@ -74,11 +40,5 @@
 	.card span {
 		color: var(--text-muted);
 		font-size: 0.9rem;
-	}
-
-	hr {
-		margin: 2.5rem 0;
-		border: 0;
-		border-top: 1px solid var(--border);
 	}
 </style>

@@ -7,7 +7,8 @@ already wired.
 
 - `package.json` → `name`
 - `wrangler.jsonc` → `name` (this becomes the Workers subdomain)
-- this file and `stack.md` / `lessons.md` — make them yours
+- the docs in `src/content/` (`stack.md`, `setup.md`, `upgrade.md`,
+  `lessons.md`) and the `NAV` array in `src/lib/docs.ts` — make them yours
 
 ## 2. Cloudflare
 
@@ -20,7 +21,7 @@ already wired.
    - `CLOUDFLARE_API_TOKEN`
    - `CLOUDFLARE_ACCOUNT_ID`
 4. Optional: a `production` environment (Settings → Environments) lets you
-   require approval before deploys. The `deploy` job already targets it.
+   require approval before deploys. The CI job already targets it.
 
 First manual deploy, if you want one before merging:
 
@@ -75,12 +76,17 @@ on the repo.
 
 ## 5. Tighten the supply chain
 
-For real projects, set a cooldown in `pnpm-workspace.yaml` so freshly published
-versions are held back:
+This starter ships `minimumReleaseAge: 0` in `pnpm-workspace.yaml` so it can
+track the newest SvelteKit 3 / Vite+ releases. A real project wants a cooldown,
+so freshly published versions are held back and a compromised release has time
+to be pulled:
 
 ```yaml
 minimumReleaseAge: 1440 # minutes (24h)
 ```
+
+This is the one setting to change first on a fork. It's the only place the
+cooldown is configured or documented.
 
 ---
 

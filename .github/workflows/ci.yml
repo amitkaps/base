@@ -16,6 +16,7 @@ permissions:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -26,11 +27,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Format, lint, typecheck
+      - name: Check (format, lint, typecheck, svelte)
         run: pnpm run check
-
-      - name: Svelte diagnostics
-        run: pnpm run check:svelte
 
       - name: Unit tests
         run: pnpm test
@@ -38,26 +36,8 @@ jobs:
       - name: Build (Cloudflare adapter)
         run: pnpm build
 
-  deploy:
-    needs: ci
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    environment: production
-    permissions:
-      contents: read
-      deployments: write
-    steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-
       - name: Deploy to Cloudflare Workers
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

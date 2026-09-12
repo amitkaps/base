@@ -1,8 +1,7 @@
 # pnpm 12 reads project settings from here (moved out of .npmrc).
 
-# This starter deliberately tracks the newest releases, so the supply-chain
-# "cooldown" guard is disabled. If you fork this for real work, set a window
-# (minutes) — e.g. 1440 for 24h — so freshly published versions are held back:
+# Supply-chain cooldown, in minutes. 0 tracks the newest releases; a real
+# project wants 1440+ — see src/content/setup.md §5.
 minimumReleaseAge: 0
 
 # Dependencies allowed to run install scripts (native binaries).
@@ -10,16 +9,13 @@ allowBuilds:
   esbuild: true
   workerd: true
 
-# Collapse every `vite` in the tree (SvelteKit's peers included) onto Vite+'s
-# core build, so there is exactly one Vite. `vite` also stays in
-# devDependencies as an alias to the same target — pnpm wants the direct edge.
+# Collapse every `vite` in the tree onto Vite+'s core build. Must stay pinned to
+# the same version as the `vite` devDependency alias — see src/content/lessons.md.
 overrides:
   'vite@*': 'npm:@voidzero-dev/vite-plus-core@0.3.1'
 
-# The alias above makes `vite` report version 0.3.x (it *is* Vite 8), and
-# bits-ui's `runed` still lists a SvelteKit 2 peer while we run SvelteKit 3 RC.
-# Both are known-good; silence the peer-range noise.
+# The alias makes `vite` report version 0.3.x (it *is* Vite 8). Known-good;
+# silence the peer-range noise.
 peerDependencyRules:
   allowedVersions:
     vite: '*'
-    '@sveltejs/kit': '*'
