@@ -38,6 +38,14 @@ Useful if you're extending this — human or agent.
 - **Guard the SvelteKit plugin out of Vitest** (`process.env.VITEST`) or you hit
   "The configured Vite SSR environment must be a RunnableDevEnvironment".
 
+## TypeScript
+
+- **Stay on 6.x for now.** TypeScript 7 (the native port) breaks `svelte-kit
+sync`, Vite+'s config resolution (`Cannot read properties of undefined
+(reading 'readFile')`) and `svelte-check` — all three still expect the 6.x
+  JS API. Dependabot will keep proposing it; re-test when svelte-check and
+  Vite+ ship native-port support.
+
 ## pnpm 12
 
 - Settings moved from `.npmrc` / `package.json#pnpm` to `pnpm-workspace.yaml`.
