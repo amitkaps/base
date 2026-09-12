@@ -1,4 +1,8 @@
-# Setup
+---
+title: Setup
+summary: 'Make it yours: Cloudflare, secrets, branch protection.'
+order: 2
+---
 
 One-time steps to turn this starter into a real project. Everything else is
 already wired.
@@ -8,7 +12,8 @@ already wired.
 - `package.json` → `name`
 - `wrangler.jsonc` → `name` (this becomes the Workers subdomain)
 - the docs in `src/content/` (`stack.md`, `setup.md`, `upgrade.md`,
-  `lessons.md`) and the `NAV` array in `src/lib/docs.ts` — make them yours
+  `lessons.md`) — make them yours. Each carries its `title`, `summary` and nav
+  `order` in frontmatter
 
 ## 2. Cloudflare
 

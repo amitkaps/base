@@ -1,4 +1,8 @@
-# Lessons
+---
+title: Lessons
+summary: 'SvelteKit 3 + Vite+ gotchas found building this — for humans and agents.'
+order: 4
+---
 
 What it actually took to wire SvelteKit 3 RC + Vite+ + Cloudflare together.
 Useful if you're extending this — human or agent.
@@ -7,6 +11,9 @@ Useful if you're extending this — human or agent.
 
 - **No `svelte.config.js`.** Adapter and compiler options are passed inline to
   `sveltekit()` in `vite.config.ts`.
+- **That config is flat.** Options such as `files` or `prerender` go straight
+  into `sveltekit({ ... })`. Wrapping them in a `kit` key, as in SvelteKit 2,
+  fails with "configuration no longer lives inside a `kit` namespace".
 - **`$lib` is gone** — it's `#lib`, a `package.json` `imports` subpath. An
   extensionless `#lib/thing` doesn't resolve inside `.svelte` files, so re-export
   everything through a `src/lib/index.ts` barrel and import `#lib`. Components and
@@ -15,8 +22,15 @@ Useful if you're extending this — human or agent.
   `node_modules/$app/tsconfig.json`. Anything that reads `tsconfig.json` outside
   the Vite pipeline (`vp check`, `svelte-check`) needs a `svelte-kit sync` first,
   hence the `svelte-kit sync` at the front of the `check` script.
-- The whole site is static, so `src/routes/+layout.ts` just does
-  `export const prerender = true`.
+- The whole site is static, so `src/routes/+layout.ts` does
+  `export const prerender = true` **and** `export const csr = false`. Without
+  the second, every prerendered page still ships the hydration runtime for no
+  benefit. A route with real client behaviour sets `csr = true` in its own
+  `+page.ts`.
+- **Prerendering is strict.** `handleHttpError` in `vite.config.ts` throws, so a
+  broken internal link fails the build — a link checker for free. If a path is
+  served by something other than this app, add it to the allowlist there rather
+  than loosening the handler.
 
 ## Vite+
 
@@ -35,6 +49,9 @@ Useful if you're extending this — human or agent.
   dependency entirely.
 - **`vp check` runs the tools directly**, not through Vite — so it won't run
   `svelte-kit sync` for you.
+- **An empty test suite fails.** `vp test` exits 1 when it finds no test
+  files, so a fork that removes the tests breaks CI until it adds one back (or
+  sets `passWithNoTests` while it has none).
 - **Guard the SvelteKit plugin out of Vitest** (`process.env.VITEST`) or you hit
   "The configured Vite SSR environment must be a RunnableDevEnvironment".
 
@@ -58,15 +75,31 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
 ## Content
 
 - Chose `import.meta.glob('/src/content/*.md', { query: '?raw', eager: true })` +
-  `marked` + a `/^#\s+(.+)$/m` title regex over Content Collections: no config
-  file, no codegen step, no sync ordering. ~30 lines in `src/lib/docs.ts`.
-- These docs carry **no frontmatter** — the title comes from the H1, and nav
-  order + card copy live in one `NAV` array. So the same file reads cleanly on
-  GitHub and renders on the site.
-- If you do want frontmatter: `gray-matter` pulls a transitive direct `eval`
-  (Rolldown warns). Use `js-yaml`'s `load` on the `---` block yourself instead.
+  `marked` over Content Collections: no config file, no codegen step, no sync
+  ordering. It all lives in `src/lib/docs.ts`.
+- **Each page's metadata is YAML frontmatter** — `title`, `summary`, `order` —
+  validated by a Zod schema. The slug is the filename. Adding a page is adding
+  one file, and a missing or mistyped key fails the build naming the file. This
+  is also the shape most existing markdown already has, so content from another
+  generator drops in with little rewriting; extend the schema for its fields.
+- **Parse frontmatter with `js-yaml`, not `gray-matter`.** `gray-matter` pulls a
+  transitive direct `eval` (Rolldown warns). Splitting the `---` block with a
+  regex and calling `js-yaml`'s `load` is a few lines.
 - Rendering happens at build time (pages are prerendered), so `marked` never
   reaches the client or the Worker.
+- **`marked` adds no heading ids**, so `#section` links resolve to nothing and
+  nobody notices. `src/lib/docs.ts` adds a heading renderer that slugs each
+  heading and keeps ids unique per page.
+- **`Marked` is a top-level export.** Use `import { Marked } from 'marked'` and
+  `new Marked()` when you need an instance with extensions; `new marked.Marked()`
+  is not a constructor.
+- **Empty frontmatter values arrive as `null`.** A key written with nothing
+  after it (`image:`) parses to `null`, and Zod's `.optional()` rejects `null`.
+  `src/lib/docs.ts` drops null keys before validating.
+- **Typographic extensions should work on tokens, not finished HTML.**
+  Post-processing the rendered string (as `marked-smartypants` does) also
+  rewrites raw HTML blocks, where `--` or straight quotes may be meaningful. A
+  `walkTokens` pass over `text` tokens leaves code and raw HTML untouched.
 
 ## Cloudflare
 
