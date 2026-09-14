@@ -82,11 +82,13 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
   one file, and a missing or mistyped key fails the build naming the file. This
   is also the shape most existing markdown already has, so content from another
   generator drops in with little rewriting; extend the schema for its fields.
-- **Parse frontmatter with `js-yaml`, not `gray-matter`.** `gray-matter` pulls a
-  transitive direct `eval` (Rolldown warns). Splitting the `---` block with a
-  regex and calling `js-yaml`'s `load` is a few lines.
-- Rendering happens at build time (pages are prerendered), so `marked` never
-  reaches the client or the Worker.
+- **Parse frontmatter with `yaml`, not `gray-matter` or `js-yaml`.** `gray-matter`
+  pulls a transitive direct `eval` (Rolldown warns); `yaml` is the
+  [e18e replacement](https://e18e.dev/docs/replacements/js-yaml) for `js-yaml`:
+  no deps, YAML 1.2, so dates and `no` stay strings. Splitting the `---` block
+  with a regex and calling `parse` is a few lines.
+- Rendering happens at build time (pages are prerendered), so `marked`, `yaml`
+  and `zod` never reach the client or the Worker — they are `devDependencies`.
 - **`marked` adds no heading ids**, so `#section` links resolve to nothing and
   nobody notices. `src/lib/docs.ts` adds a heading renderer that slugs each
   heading and keeps ids unique per page.
