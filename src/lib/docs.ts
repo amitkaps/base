@@ -1,9 +1,9 @@
-import { load as parseYaml } from 'js-yaml';
+import { parse as parseYaml } from 'yaml';
 import { Marked, type RendererObject, type Tokens } from 'marked';
 import { z } from 'zod';
 
 // Eager glob: every doc is read and rendered at build time. The pages are
-// prerendered, so `marked` and `js-yaml` never ship to the client or the Worker.
+// prerendered, so `marked` and `yaml` never ship to the client or the Worker.
 // Adding a page is adding a file: the slug is the filename, and everything else
 // comes from its frontmatter.
 const files = import.meta.glob('/src/content/*.md', {
