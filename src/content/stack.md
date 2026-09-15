@@ -54,7 +54,7 @@ generated, not committed.
 
 ```
 src/
-  app.css                  design tokens + reset (light/dark)
+  app.css                  design tokens, reset, and prose (dark)
   content/*.md              these four docs — the content demo
   lib/
     docs.ts                 glob + marked + Zod — loads src/content, unit-tested
