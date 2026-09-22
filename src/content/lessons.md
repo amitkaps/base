@@ -71,8 +71,6 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
 - `onlyBuiltDependencies` is now an `allowBuilds:` map (`esbuild: true`, …).
 - `minimumReleaseAge` blocks packages published in the last N minutes — a
   supply-chain guard, configured in `setup.md` §5.
-- On an Intel Mac, mise can't install pnpm 12 from the default (aqua) backend —
-  no `darwin-x64` build. Use `"github:pnpm/pnpm"`.
 
 ## Content
 
