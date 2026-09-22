@@ -71,8 +71,24 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
 - `onlyBuiltDependencies` is now an `allowBuilds:` map (`esbuild: true`, …).
 - `minimumReleaseAge` blocks packages published in the last N minutes — a
   supply-chain guard, configured in `setup.md` §5.
-- On an Intel Mac, mise can't install pnpm 12 from the default (aqua) backend —
-  no `darwin-x64` build. Use `"github:pnpm/pnpm"`.
+
+## mise
+
+- **`mise.toml` pins Node and pnpm; nothing else does, for local dev.**
+  `.node-version` and `package.json`'s `packageManager` are what CI reads
+  (`actions/setup-node` and `pnpm/action-setup` respectively) — mise doesn't
+  read either file itself unless `idiomatic_version_file_enable_tools` is
+  turned on, which it isn't by default. Without the explicit pins, a global
+  `node = "lts"` / `pnpm = "latest"` in your own `~/.config/mise/config.toml`
+  silently overrides the project's versions and can drift from what CI runs.
+- **A `"latest"` mise alias can go stale.** With `auto_update = true`, mise
+  updates a `"latest"` install in place, but its own version bookkeeping
+  (`mise ls`, `mise where`) can lag behind what's actually on disk. Installing
+  the exact version (`mise install pnpm@<version>`) forces it back in sync.
+- **The Intel Mac aqua-backend gap is gone.** Earlier pnpm 12 releases had no
+  `darwin-x64` build on mise's default (aqua) backend, needing a
+  `"github:pnpm/pnpm"` workaround. As of pnpm 12.6.0, aqua ships that build —
+  confirmed on an actual Intel Mac. No special-casing needed now.
 
 ## Content
 

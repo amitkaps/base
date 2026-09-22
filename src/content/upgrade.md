@@ -53,9 +53,12 @@ pnpm check && pnpm test && pnpm build
 
 ## Node & pnpm
 
-Bump together: `.node-version`, `package.json` `engines.node`, and
-`package.json` `packageManager`. CI reads `.node-version`, so that file is the
-source of truth for the runtime.
+Bump together: `.node-version`, `mise.toml`, `package.json` `engines.node`, and
+`package.json` `packageManager`. CI reads `.node-version` and `packageManager`
+(via `pnpm/action-setup`); `mise.toml` pins the same versions for local dev —
+mise doesn't read either file automatically, so without it your local `pnpm`
+and `node` can silently drift from what CI uses. `mise install` after bumping
+picks up the new pins.
 
 ## Re-syncing a fork with upstream
 
