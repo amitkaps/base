@@ -41,9 +41,11 @@ Useful if you're extending this — human or agent.
   blocks — not `.oxfmtrc` / `.oxlintrc`. Use `defineConfig` from `vite-plus`.
 - **Deduplicate Vite.** SvelteKit's peers pull a real `vite`, while Vite+ wants
   `@voidzero-dev/vite-plus-core`. Left alone you get two. Fix: a
-  `pnpm-workspace.yaml` override — `'vite@*': 'npm:@voidzero-dev/vite-plus-core@<v>'` —
-  plus keep `vite` as a dev dependency alias so pnpm has the edge. This is what
-  `vp migrate` does.
+  `pnpm-workspace.yaml` override — `'vite@*': 'npm:@voidzero-dev/vite-plus-core@<v>'`.
+  A `vite` dev dependency alias isn't needed alongside it — the override alone
+  dedupes every consumer onto one `vite-plus-core` (`pnpm why vite` confirms
+  no second copy). `vp migrate` does add the alias, so a fork run through it
+  will have one; safe to drop.
 - **Tests import from `vite-plus/test`**, not `vitest` (not a direct dep) and not
   `@voidzero-dev/vite-plus-test` (removed in 0.3.x). You can drop the `vitest`
   dependency entirely.

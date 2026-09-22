@@ -187,9 +187,6 @@ importers:
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
-      vite:
-        specifier: npm:@voidzero-dev/vite-plus-core@1.0.0-rc.0
-        version: '@voidzero-dev/vite-plus-core@1.0.0-rc.0(@types/node@24.13.3)(esbuild@0.28.1)(typescript@6.0.3)(yaml@2.9.1)'
       vite-plus:
         specifier: 1.0.0-rc.0
         version: 1.0.0-rc.0(@types/node@24.13.3)(@vitest/ui@5.0.1)(esbuild@0.28.1)(svelte@5.57.0)(typescript@6.0.3)(yaml@2.9.1)
