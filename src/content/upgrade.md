@@ -6,7 +6,7 @@ order: 3
 
 `setup.md` is one-time. This is the recurring part: keeping a fork current
 without breaking it. The stack is deliberately on the bleeding edge (SvelteKit 3
-RC, Vite+ beta, no release cooldown), so bumps land often.
+RC, Vite+ RC, no release cooldown), so bumps land often.
 
 ## The rhythm
 

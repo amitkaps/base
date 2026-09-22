@@ -12,7 +12,7 @@ allowBuilds:
 # Collapse every `vite` in the tree onto Vite+'s core build. Must stay pinned to
 # the same version as the `vite` devDependency alias — see src/content/lessons.md.
 overrides:
-  'vite@*': 'npm:@voidzero-dev/vite-plus-core@0.3.2'
+  'vite@*': 'npm:@voidzero-dev/vite-plus-core@1.0.0-rc.0'
 
 # The alias makes `vite` report version 0.3.x (it *is* Vite 8). Known-good;
 # silence the peer-range noise.
