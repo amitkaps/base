@@ -4,7 +4,8 @@ An opinionated, kept-current starter for SvelteKit apps deployed to Cloudflare
 Workers — SvelteKit 3 + Vite+ + Zod + plain CSS.
 
 ```sh
-# needs Node 26 + pnpm 12.6+ — `mise install` reads mise.toml
+# needs Node 26 + pnpm 12.6+ — mise.toml pins both
+mise install
 pnpm install
 pnpm dev
 ```
