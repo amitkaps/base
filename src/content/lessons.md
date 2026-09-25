@@ -54,8 +54,15 @@ Useful if you're extending this — human or agent.
 - **An empty test suite fails.** `vp test` exits 1 when it finds no test
   files, so a fork that removes the tests breaks CI until it adds one back (or
   sets `passWithNoTests` while it has none).
-- **Guard the SvelteKit plugin out of Vitest** (`process.env.VITEST`) or you hit
-  "The configured Vite SSR environment must be a RunnableDevEnvironment".
+- **Guard the SvelteKit plugin out of Vitest** (`process.env.VITEST`).
+  `adapter-cloudflare` starts wrangler's `getPlatformProxy()` from its Vite
+  `configureServer` hook and never disposes it, so with the plugin loaded the
+  tests pass and Vitest then waits 10s and prints "close timed out … something
+  prevents 2 Vite servers from exiting". It happens on plain Vite too. Earlier
+  kit RCs threw "The configured Vite SSR environment must be a
+  RunnableDevEnvironment" instead; that no longer reproduces. Tracked in
+  [sveltejs/kit#17215](https://github.com/sveltejs/kit/issues/17215); drop the
+  guard once the adapter disposes the proxy.
 
 ## TypeScript
 
