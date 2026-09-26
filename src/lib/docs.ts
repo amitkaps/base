@@ -113,7 +113,7 @@ function render(path: string, source: string): Doc {
 
 	// A key with nothing after it (`image:`) parses to null, which Zod's
 	// .optional() rejects. Treat it as absent.
-	const raw = (parseYaml(match[1]) ?? {}) as Record<string, unknown>;
+	const raw = (parseYaml(match[1] ?? '') ?? {}) as Record<string, unknown>;
 	for (const [key, value] of Object.entries(raw)) {
 		if (value === null || value === '') delete raw[key];
 	}
