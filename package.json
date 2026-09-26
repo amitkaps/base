@@ -16,6 +16,7 @@
 		"prepare": "svelte-kit sync && wrangler types"
 	},
 	"devDependencies": {
+		"@amitkaps/prose": "https://github.com/amitkaps/prose/releases/download/v0.1.0/amitkaps-prose-0.1.0.tgz",
 		"@sveltejs/adapter-cloudflare": "^8.0.0-next.6",
 		"@sveltejs/kit": "^3.0.0-next.29",
 		"marked": "^18.0.14",
