@@ -12,4 +12,4 @@ allowBuilds:
 # Collapse every `vite` in the tree onto Vite+'s core build — see
 # src/content/lessons.md. Bump this alongside the `vite-plus` devDependency.
 overrides:
-  'vite@*': 'npm:@voidzero-dev/vite-plus-core@1.0.0-rc.0'
+  'vite@*': 'npm:@voidzero-dev/vite-plus-core@1.0.0'
