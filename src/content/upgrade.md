@@ -6,7 +6,7 @@ order: 3
 
 `setup.md` is one-time. This is the recurring part: keeping a fork current
 without breaking it. The stack is deliberately on the bleeding edge (SvelteKit 3
-RC, Vite+ RC, no release cooldown), so bumps land often.
+RC, no release cooldown), so bumps land often.
 
 ## The rhythm
 
@@ -37,8 +37,8 @@ pnpm outdated
 pnpm up --latest <pkg>        # or edit package.json + pnpm install
 ```
 
-The `vite` override and the `vite` devDependency alias must stay pinned to the
-same version — bump them together. `lessons.md` (`/lessons`) explains why.
+The `vite` override in `pnpm-workspace.yaml` must point at the same
+`vite-plus-core` version as the `vite-plus` devDependency — bump them together. `lessons.md` (`/lessons`) explains why.
 
 ## After any bump
 
@@ -78,6 +78,6 @@ New gotchas land in upstream `lessons.md` — worth re-reading after a big bump.
 
 ## Graduating off the bleeding edge
 
-Once SvelteKit 3 and Vite+ ship stable, relax the RC version ranges in
-`package.json` to normal caret ranges and delete this section. (The
+Vite+ is stable (1.0) and on a caret range. Once SvelteKit 3 ships stable,
+relax its RC ranges in `package.json` the same way and delete this section. (The
 supply-chain cooldown is a separate call — see `setup.md` §5.)
