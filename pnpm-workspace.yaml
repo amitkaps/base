@@ -14,7 +14,7 @@ allowBuilds:
 # src/content/lessons.md. It follows the `vite-plus` catalog entry below, so
 # one line bumps both.
 overrides:
-  'vite@*': 'npm:@voidzero-dev/vite-plus-core@catalog:vite-plus'
+  "vite@*": "npm:@voidzero-dev/vite-plus-core@catalog:vite-plus"
 
 # One Vite+ version for the `vite-plus` devDependency (`catalog:`) and the override.
 catalog:
