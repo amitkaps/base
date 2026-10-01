@@ -4,10 +4,10 @@ summary: "SvelteKit 3 + Vite+ gotchas found building this — for humans and age
 order: 4
 ---
 
-What it actually took to wire SvelteKit 3 RC + Vite+ + Cloudflare together.
+What it actually took to wire SvelteKit 3 + Vite+ + Cloudflare together.
 Useful if you're extending this — human or agent.
 
-## SvelteKit 3 (RC)
+## SvelteKit 3
 
 - **No `svelte.config.js`.** Adapter and compiler options are passed inline to
   `sveltekit()` in `vite.config.ts`.
@@ -57,20 +57,12 @@ Useful if you're extending this — human or agent.
 - **An empty test suite fails.** `vp test` exits 1 when it finds no test
   files, so a fork that removes the tests breaks CI until it adds one back (or
   sets `passWithNoTests` while it has none).
-- **No Vitest guard needed on `adapter-cloudflare` 8.0.0-next.8+.** Earlier
+- **No Vitest guard needed on `adapter-cloudflare` 8.0.0+.** Earlier
   versions started wrangler's `getPlatformProxy()` from the Vite
   `configureServer` hook and never disposed it, so tests passed and Vitest then
   hung 10s printing "close timed out … something prevents 2 Vite servers from
   exiting" ([sveltejs/kit#17215](https://github.com/sveltejs/kit/issues/17215)).
   If you see that on an older adapter, skip the plugins under `process.env.VITEST`.
-
-## TypeScript
-
-- **Stay on 6.x for now.** TypeScript 7 (the native port) breaks `svelte-kit
-sync`, Vite+'s config resolution (`Cannot read properties of undefined
-(reading 'readFile')`) and `svelte-check` — all three still expect the 6.x
-  JS API. Dependabot will keep proposing it; re-test when svelte-check and
-  Vite+ ship native-port support.
 
 ## pnpm 12
 
@@ -88,6 +80,15 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
   same file when `idiomatic_version_file_enable_tools` is on, so there's no
   `mise.toml` or `.node-version` to keep in sync.
 
+## Editor
+
+- **The Svelte VS Code extension can't read the config yet.** With no
+  `svelte.config.js`, it looks for the Svelte plugin in `vite.config.ts` and fails
+  with "No Svelte configuration found in vite config" on line 1 of every
+  `.svelte` file, and `<script>` blocks lose their highlighting. Nothing is
+  wrong with the code: `svelte-check` (run by `pnpm check`) is the source of
+  truth. Re-test after the extension updates.
+
 ## TypeScript
 
 - **Stay on TypeScript 6 for now.** TypeScript 7 (the native port) removes the
@@ -99,33 +100,27 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
 ## Content
 
 - Chose `import.meta.glob('/src/content/*.md', { query: '?raw', eager: true })` +
-  `marked` over Content Collections: no config file, no codegen step, no sync
-  ordering. It all lives in `src/lib/docs.ts`.
-- **Each page's metadata is YAML frontmatter** — `title`, `summary`, `order` —
-  validated by a Zod schema. The slug is the filename. Adding a page is adding
-  one file, and a missing or mistyped key fails the build naming the file. This
-  is also the shape most existing markdown already has, so content from another
-  generator drops in with little rewriting; extend the schema for its fields.
-- **Parse frontmatter with `yaml`, not `gray-matter` or `js-yaml`.** `gray-matter`
-  pulls a transitive direct `eval` (Rolldown warns); `yaml` is the
-  [e18e replacement](https://e18e.dev/docs/replacements/js-yaml) for `js-yaml`:
-  no deps, YAML 1.2, so dates and `no` stay strings. Splitting the `---` block
-  with a regex and calling `parse` is a few lines.
-- Rendering happens at build time (pages are prerendered), so `marked`, `yaml`
+  [`@amitkaps/markz`](https://markz.amitkaps.com) over Content Collections: no
+  config file, no codegen step, no sync ordering. It all lives in `src/lib/docs.ts`.
+- **Each page's metadata is a `---` block** — `title`, `summary`, `order` — read
+  by markz and validated by a Zod schema. The slug is the filename. Adding a page
+  is adding one file, and a missing or mistyped key fails the build naming the
+  file. Extend the schema for more fields.
+- **markz's metadata is a flat `key: value` block**, not full YAML: no nesting,
+  lists only as `[a, b]`, and a value YAML would read differently (`no`, a bare
+  date) warns rather than guessing. Quote it.
+- **One parser replaces `marked`, `yaml` and the glue.** markz also gives heading
+  ids (unique per page, any script) and curly punctuation, which used to be a
+  custom renderer and a `walkTokens` pass.
+- **Any markz warning fails the build.** It keeps unsupported syntax (raw HTML,
+  `*emphasis*`, `__strong__`, reference links, bare URLs, ...) as literal text and
+  warns, so `render` in `src/lib/docs.ts` throws with the file, line and the form to
+  write instead. The dialect is in [markz's syntax doc](https://markz.amitkaps.com).
+- Rendering happens at build time (pages are prerendered), so `@amitkaps/markz`
   and `zod` never reach the client or the Worker — they are `devDependencies`.
-- **`marked` adds no heading ids**, so `#section` links resolve to nothing and
-  nobody notices. `src/lib/docs.ts` adds a heading renderer that slugs each
-  heading and keeps ids unique per page.
-- **`Marked` is a top-level export.** Use `import { Marked } from 'marked'` and
-  `new Marked()` when you need an instance with extensions; `new marked.Marked()`
-  is not a constructor.
-- **Empty frontmatter values arrive as `null`.** A key written with nothing
-  after it (`image:`) parses to `null`, and Zod's `.optional()` rejects `null`.
+- **Empty metadata values arrive as `null`.** A key written with nothing after it
+  (`image:`) reads as `null`, and Zod's `.optional()` rejects `null`.
   `src/lib/docs.ts` drops null keys before validating.
-- **Typographic extensions should work on tokens, not finished HTML.**
-  Post-processing the rendered string (as `marked-smartypants` does) also
-  rewrites raw HTML blocks, where `--` or straight quotes may be meaningful. A
-  `walkTokens` pass over `text` tokens leaves code and raw HTML untouched.
 
 ## Cloudflare
 

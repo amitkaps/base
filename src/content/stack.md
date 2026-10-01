@@ -12,11 +12,11 @@ config files carry the weight: **`vite.config.ts`** (dev + toolchain) and
 
 | Layer      | Choice                         | Why                                                 |
 | ---------- | ------------------------------ | --------------------------------------------------- |
-| Framework  | SvelteKit 3 (RC) + Svelte 5    | Runes, prerendered by default                       |
+| Framework  | SvelteKit 3 + Svelte 5         | Runes, prerendered by default                       |
 | Toolchain  | Vite+ (`vp`)                   | Vite, Vitest, Oxlint, Oxfmt, tsc behind one command |
 | Language   | TypeScript                     | —                                                   |
 | Validation | Zod 4                          | Validates the parsed docs in `src/lib/docs.ts`      |
-| Content    | `import.meta.glob` + `marked`  | Markdown pages, no plugin, no codegen               |
+| Content    | `import.meta.glob` + markz     | Markdown pages, no plugin, no codegen               |
 | Styling    | Plain CSS                      | Tokens in `src/app.css`, no framework               |
 | Deploy     | `@sveltejs/adapter-cloudflare` | Cloudflare Workers                                  |
 | CI/CD      | GitHub Actions                 | Checks on every PR, deploy on merge to `main`       |
@@ -57,7 +57,7 @@ src/
   app.css                  design tokens, reset, and prose (dark)
   content/*.md              these four docs — the content demo
   lib/
-    docs.ts                 glob + marked + Zod — loads src/content, unit-tested
+    docs.ts                 glob + markz + Zod — loads src/content, unit-tested
   routes/
     +page.svelte            home — links to the docs
     [slug]/                 renders one doc; prerendered from docs list

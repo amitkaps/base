@@ -1,6 +1,6 @@
 # Working on this repo
 
-Read **`src/content/lessons.md`** first — it covers the SvelteKit 3 RC, Vite+,
+Read **`src/content/lessons.md`** first — it covers SvelteKit 3, Vite+,
 pnpm 12 and Cloudflare quirks this project already worked through.
 
 - Before committing: `pnpm check` (format, lint, typecheck, Svelte diagnostics)
