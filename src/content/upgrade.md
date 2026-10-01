@@ -5,13 +5,13 @@ order: 3
 ---
 
 `setup.md` is one-time. This is the recurring part: keeping a fork current
-without breaking it. The stack is deliberately on the bleeding edge (SvelteKit 3
-RC, no release cooldown), so bumps land often.
+without breaking it. The stack tracks the latest releases (SvelteKit 3, Vite+
+1.0, no release cooldown), so bumps land often.
 
 ## The rhythm
 
 - **Weekly** — Dependabot opens grouped PRs. Skim, merge the safe ones (below).
-- **Monthly** — `pnpm outdated`; bump the toolchain (Vite+, SvelteKit RC)
+- **Monthly** — `pnpm outdated`; bump the toolchain (Vite+, SvelteKit)
   deliberately and smoke-test.
 - **Every bump** — CI must be green before merge. Strict branch protection on
   `main` enforces this and auto-rebases the other open PRs after each merge.
@@ -71,9 +71,3 @@ Periodically diff the toolchain files against upstream and cherry-pick fixes:
 - `src/lib/docs.ts`
 
 New gotchas land in upstream `lessons.md` — worth re-reading after a big bump.
-
-## Graduating off the bleeding edge
-
-Vite+ is stable (1.0) and on a caret range. Once SvelteKit 3 ships stable,
-relax its RC ranges in `package.json` the same way and delete this section. (The
-supply-chain cooldown is a separate call — see `setup.md` §5.)

@@ -13,7 +13,7 @@ Five commands are the whole interface: `dev`, `build`, `check`, `test`, `deploy`
 `pnpm prose` opens the repo as a document.
 
 The starter's own docs are its demo content — the markdown files under
-`src/content/`, each with YAML frontmatter validated in
+`src/content/`, each with a metadata block validated in
 [`src/lib/docs.ts`](src/lib/docs.ts), served at `/stack`, `/setup`,
 `/upgrade` and `/lessons`. Start with
 [`stack.md`](src/content/stack.md) to see what's in the box, then
