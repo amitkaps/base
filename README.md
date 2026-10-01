@@ -4,13 +4,13 @@ An opinionated, kept-current starter for SvelteKit apps deployed to Cloudflare
 Workers — SvelteKit 3 + Vite+ + Zod + plain CSS.
 
 ```sh
-# needs Node 26 + pnpm 12.6+ — mise.toml pins both
-mise install
+# needs Node 26 + pnpm 12.8+ — package.json (devEngines) pins both
 pnpm install
 pnpm dev
 ```
 
 Five commands are the whole interface: `dev`, `build`, `check`, `test`, `deploy`.
+`pnpm prose` opens the repo as a document.
 
 The starter's own docs are its demo content — the markdown files under
 `src/content/`, each with YAML frontmatter validated in

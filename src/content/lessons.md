@@ -41,7 +41,10 @@ Useful if you're extending this — human or agent.
   blocks — not `.oxfmtrc` / `.oxlintrc`. Use `defineConfig` from `vite-plus`.
 - **Deduplicate Vite.** SvelteKit's peers pull a real `vite`, while Vite+ wants
   `@voidzero-dev/vite-plus-core`. Left alone you get two. Fix: a
-  `pnpm-workspace.yaml` override — `'vite@*': 'npm:@voidzero-dev/vite-plus-core@<v>'`.
+  `pnpm-workspace.yaml` override — `'vite@*': 'npm:@voidzero-dev/vite-plus-core@catalog:vite-plus'`.
+  The `vite-plus` catalog entry in the same file is the one place the version
+  lives; the devDependency is `"vite-plus": "catalog:"`. (Verified: a bogus
+  catalog version fails the install, so the override really follows it.)
   A `vite` dev dependency alias isn't needed alongside it — the override alone
   dedupes every consumer onto one `vite-plus-core` (`pnpm why vite` confirms
   no second copy). `vp migrate` does add the alias, so a fork run through it
@@ -54,15 +57,12 @@ Useful if you're extending this — human or agent.
 - **An empty test suite fails.** `vp test` exits 1 when it finds no test
   files, so a fork that removes the tests breaks CI until it adds one back (or
   sets `passWithNoTests` while it has none).
-- **Guard the SvelteKit plugin out of Vitest** (`process.env.VITEST`).
-  `adapter-cloudflare` starts wrangler's `getPlatformProxy()` from its Vite
-  `configureServer` hook and never disposes it, so with the plugin loaded the
-  tests pass and Vitest then waits 10s and prints "close timed out … something
-  prevents 2 Vite servers from exiting". It happens on plain Vite too. Earlier
-  kit RCs threw "The configured Vite SSR environment must be a
-  RunnableDevEnvironment" instead; that no longer reproduces. Tracked in
-  [sveltejs/kit#17215](https://github.com/sveltejs/kit/issues/17215); drop the
-  guard once the adapter disposes the proxy.
+- **No Vitest guard needed on `adapter-cloudflare` 8.0.0-next.8+.** Earlier
+  versions started wrangler's `getPlatformProxy()` from the Vite
+  `configureServer` hook and never disposed it, so tests passed and Vitest then
+  hung 10s printing "close timed out … something prevents 2 Vite servers from
+  exiting" ([sveltejs/kit#17215](https://github.com/sveltejs/kit/issues/17215)).
+  If you see that on an older adapter, skip the plugins under `process.env.VITEST`.
 
 ## TypeScript
 
@@ -79,23 +79,22 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
 - `minimumReleaseAge` blocks packages published in the last N minutes — a
   supply-chain guard, configured in `setup.md` §5.
 
-## mise
+## Node & pnpm versions
 
-- **`mise.toml` pins Node and pnpm; nothing else does, for local dev.**
-  `.node-version` and `package.json`'s `packageManager` are what CI reads
-  (`actions/setup-node` and `pnpm/action-setup` respectively) — mise doesn't
-  read either file itself unless `idiomatic_version_file_enable_tools` is
-  turned on, which it isn't by default. Without the explicit pins, a global
-  `node = "lts"` / `pnpm = "latest"` in your own `~/.config/mise/config.toml`
-  silently overrides the project's versions and can drift from what CI runs.
-- **A `"latest"` mise alias can go stale.** With `auto_update = true`, mise
-  updates a `"latest"` install in place, but its own version bookkeeping
-  (`mise ls`, `mise where`) can lag behind what's actually on disk. Installing
-  the exact version (`mise install pnpm@<version>`) forces it back in sync.
-- **The Intel Mac aqua-backend gap is gone.** Earlier pnpm 12 releases had no
-  `darwin-x64` build on mise's default (aqua) backend, needing a
-  `"github:pnpm/pnpm"` workaround. As of pnpm 12.6.0, aqua ships that build —
-  confirmed on an actual Intel Mac. No special-casing needed now.
+- **`package.json` is the one place.** `devEngines` (`runtime` + `packageManager`,
+  `onFail: error`) makes a wrong Node or pnpm fail the install loudly; `engines`
+  and `packageManager` are what CI reads (`actions/setup-node` with
+  `node-version-file: package.json`, and `pnpm/action-setup`). mise reads the
+  same file when `idiomatic_version_file_enable_tools` is on, so there's no
+  `mise.toml` or `.node-version` to keep in sync.
+
+## TypeScript
+
+- **Stay on TypeScript 6 for now.** TypeScript 7 (the native port) removes the
+  JS API SvelteKit 3.0.0 uses to load `tsconfig.json`: every `svelte-kit sync`
+  fails with "Cannot read properties of undefined (reading 'readFile')". Kit's
+  peer range is `^6`, and `svelte-check` 4.7 allows `^5 || ^6`. Move when both
+  widen their peers.
 
 ## Content
 
@@ -152,7 +151,7 @@ sync`, Vite+'s config resolution (`Cannot read properties of undefined
 
 ## CI
 
-- `pnpm/action-setup` + `actions/setup-node` (`node-version-file: .node-version`,
+- `pnpm/action-setup` + `actions/setup-node` (`node-version-file: package.json`,
   `cache: pnpm`) is all the setup needed. Every step runs through `pnpm run …`,
   so no global tooling in CI either.
 - One job, not two: the deploy step is a guarded step at the end of `ci` rather
