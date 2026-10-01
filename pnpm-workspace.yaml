@@ -1,4 +1,5 @@
-# pnpm 12 reads project settings from here (moved out of .npmrc).
+# pnpm 12 reads project settings from here (moved out of .npmrc and
+# package.json#pnpm) — this is a settings file, not a workspace.
 
 # Supply-chain cooldown, in minutes. 0 tracks the newest releases; a real
 # project wants 1440+ — see src/content/setup.md §5.
@@ -10,6 +11,11 @@ allowBuilds:
   workerd: true
 
 # Collapse every `vite` in the tree onto Vite+'s core build — see
-# src/content/lessons.md. Bump this alongside the `vite-plus` devDependency.
+# src/content/lessons.md. It follows the `vite-plus` catalog entry below, so
+# one line bumps both.
 overrides:
-  'vite@*': 'npm:@voidzero-dev/vite-plus-core@1.0.0'
+  'vite@*': 'npm:@voidzero-dev/vite-plus-core@catalog:vite-plus'
+
+# One Vite+ version for the `vite-plus` devDependency (`catalog:`) and the override.
+catalog:
+  vite-plus: 1.0.0

@@ -37,8 +37,7 @@ pnpm outdated
 pnpm up --latest <pkg>        # or edit package.json + pnpm install
 ```
 
-The `vite` override in `pnpm-workspace.yaml` must point at the same
-`vite-plus-core` version as the `vite-plus` devDependency — bump them together. `lessons.md` (`/lessons`) explains why.
+Bump Vite+ by editing the `vite-plus` entry under `catalog:` in `pnpm-workspace.yaml` — the devDependency and the `vite` override both follow it. `lessons.md` (`/lessons`) explains why. Dependabot's pnpm support isn't documented past v10, so don't expect it to bump that line.
 
 ## After any bump
 
@@ -53,12 +52,9 @@ pnpm check && pnpm test && pnpm build
 
 ## Node & pnpm
 
-Bump together: `.node-version`, `mise.toml`, `package.json` `engines.node`, and
-`package.json` `packageManager`. CI reads `.node-version` and `packageManager`
-(via `pnpm/action-setup`); `mise.toml` pins the same versions for local dev —
-mise doesn't read either file automatically, so without it your local `pnpm`
-and `node` can silently drift from what CI uses. `mise install` after bumping
-picks up the new pins.
+Bump `package.json` — `devEngines`, `engines.node` and `packageManager` together.
+CI reads `engines.node` and `packageManager` (via `pnpm/action-setup`), and
+`devEngines` makes a local mismatch fail the install instead of drifting.
 
 ## Re-syncing a fork with upstream
 

@@ -9,6 +9,7 @@
 	},
 	"scripts": {
 		"dev": "vp dev",
+		"prose": "prose .",
 		"build": "vp build",
 		"check": "svelte-kit sync && wrangler types && vp check && svelte-check --tsconfig ./tsconfig.json",
 		"test": "vp test --run",
@@ -16,20 +17,32 @@
 		"prepare": "svelte-kit sync && wrangler types"
 	},
 	"devDependencies": {
-		"@amitkaps/prose": "https://github.com/amitkaps/prose/releases/download/v0.1.0/amitkaps-prose-0.1.0.tgz",
-		"@sveltejs/adapter-cloudflare": "^8.0.0-next.6",
-		"@sveltejs/kit": "^3.0.0-next.29",
+		"@amitkaps/prose": "^0.3.0",
+		"@sveltejs/adapter-cloudflare": "^8.0.0",
+		"@sveltejs/kit": "^3.0.0",
 		"marked": "^18.0.14",
 		"svelte": "^5.57.1",
-		"svelte-check": "^4.6.0",
+		"svelte-check": "^4.7.6",
 		"typescript": "^6.0.3",
-		"vite-plus": "^1.0.0",
-		"wrangler": "^4.140.0",
+		"vite-plus": "catalog:",
+		"wrangler": "^4.146.0",
 		"yaml": "^2.9.1",
 		"zod": "^4.6.5"
+	},
+	"devEngines": {
+		"packageManager": {
+			"name": "pnpm",
+			"version": "12.8.1",
+			"onFail": "error"
+		},
+		"runtime": {
+			"name": "node",
+			"version": ">=26",
+			"onFail": "error"
+		}
 	},
 	"engines": {
 		"node": ">=26"
 	},
-	"packageManager": "pnpm@12.6.0"
+	"packageManager": "pnpm@12.8.1"
 }
