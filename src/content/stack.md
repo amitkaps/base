@@ -1,6 +1,6 @@
 ---
 title: Stack
-summary: 'Every piece in the starter, and why it was chosen.'
+summary: "Every piece in the starter, and why it was chosen."
 order: 1
 ---
 

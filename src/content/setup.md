@@ -1,6 +1,6 @@
 ---
 title: Setup
-summary: 'Make it yours: Cloudflare, secrets, branch protection.'
+summary: "Make it yours: Cloudflare, secrets, branch protection."
 order: 2
 ---
 

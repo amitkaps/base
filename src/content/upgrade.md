@@ -1,6 +1,6 @@
 ---
 title: Upgrade
-summary: 'Keep a fork current: Dependabot, manual bumps, re-syncing with upstream.'
+summary: "Keep a fork current: Dependabot, manual bumps, re-syncing with upstream."
 order: 3
 ---
 

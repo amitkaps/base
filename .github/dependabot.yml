@@ -8,11 +8,11 @@ updates:
     ignore:
       # Kit 3 and svelte-check don't support TypeScript 7 yet — see lessons.md.
       - dependency-name: typescript
-        update-types: ['version-update:semver-major']
+        update-types: ["version-update:semver-major"]
     groups:
       sveltekit:
         patterns:
-          - '@sveltejs/*'
+          - "@sveltejs/*"
           - svelte
           - svelte-check
           - typescript

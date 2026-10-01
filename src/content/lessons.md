@@ -1,6 +1,6 @@
 ---
 title: Lessons
-summary: 'SvelteKit 3 + Vite+ gotchas found building this — for humans and agents.'
+summary: "SvelteKit 3 + Vite+ gotchas found building this — for humans and agents."
 order: 4
 ---
 
