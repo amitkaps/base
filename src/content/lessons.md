@@ -133,16 +133,22 @@ Useful if you're extending this — human or agent.
   `.svelte-kit/cloudflare/_worker.js`, dragging the built worker into the
   TypeScript program. `"checkJs": false` in `tsconfig.json` keeps `pnpm check`
   from reporting errors in generated output.
-- **Stay on `wrangler` — `cf` can't deploy SvelteKit yet.** Tried with `cf`
-  1.0.0-beta.5, Cloudflare's successor CLI. `cf migrate` turns `wrangler.jsonc`
-  into a typed `cloudflare.config.ts`, and `cf workers types` replaces
-  `wrangler types`. But `cf deploy` only uploads cf's own Build Output
-  (`.cloudflare/output/v0/`), which `adapter-cloudflare` doesn't write. For
-  Vite projects that output comes from `@cloudflare/vite-plugin`, and SvelteKit
-  doesn't build through that plugin. `cf deploy` also runs `vite build`, and this
-  project has only `vp`. Moving just the config would leave `wrangler deploy`
-  reading a second copy of it. Re-test when the adapter or `cf` supports this.
-  Wrangler is maintained for 18 months after the `cf` beta ends.
+- **Stay on `wrangler` — `cf` can't deploy SvelteKit yet.** Last tried with
+  `cf` 1.0.0-beta.12, Cloudflare's successor CLI. `cf migrate` turns
+  `wrangler.jsonc` into a typed `cloudflare.config.ts`, and `cf workers types`
+  replaces `wrangler types`. With the default Wrangler bundler, `assets.directory`
+  moves to a separate `wrangler.config.ts`. With `--bundler vite`, it has nowhere
+  to go and is left as a TODO. Either way, `cf deploy` fails twice over. It runs
+  `pnpm vite build`, this project has only `vp`, and the config can't name
+  another build command. Even when the build succeeds, `cf deploy` uploads only
+  cf's own Build Output (`.cloudflare/output/v0/`), and `adapter-cloudflare`
+  doesn't write it. `--prebuilt` fails the same way. For Vite projects that
+  output comes from `@cloudflare/vite-plugin`, and SvelteKit doesn't build
+  through that plugin. cf's own framework table marks SvelteKit
+  `supportsCf: false` and knows only majors up to 2. Moving just the config
+  would leave `wrangler deploy` reading a second copy of it. Re-test when the
+  adapter or `cf` supports this. Wrangler is maintained for 18 months after the
+  `cf` beta ends.
 
 ## CI
 
