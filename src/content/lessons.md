@@ -1,10 +1,10 @@
 ---
 title: Lessons
-summary: "SvelteKit 3 + Vite+ gotchas found building this — for humans and agents."
+summary: "SvelteKit 3 + Vite + Cloudflare gotchas found building this — for humans and agents."
 order: 4
 ---
 
-What it actually took to wire SvelteKit 3 + Vite+ + Cloudflare together.
+What it actually took to wire SvelteKit 3 + Vite + Cloudflare together.
 Useful if you're extending this — human or agent.
 
 ## SvelteKit 3
@@ -20,7 +20,7 @@ Useful if you're extending this — human or agent.
   assets (which have extensions) can be imported directly: `#lib/components/X.svelte`.
 - **`$app/tsconfig` is virtual** — `svelte-kit sync` writes it to
   `node_modules/$app/tsconfig.json`. Anything that reads `tsconfig.json` outside
-  the Vite pipeline (`vp check`, `svelte-check`) needs a `svelte-kit sync` first,
+  the Vite pipeline (`oxlint --type-aware`, `svelte-check`) needs a `svelte-kit sync` first,
   hence the `svelte-kit sync` at the front of the `check` script.
 - The whole site is static, so `src/routes/+layout.ts` does
   `export const prerender = true` **and** `export const csr = false`. Without
@@ -32,29 +32,33 @@ Useful if you're extending this — human or agent.
   served by something other than this app, add it to the allowlist there rather
   than loosening the handler.
 
-## Vite+
+## Toolchain
 
-- **No global `vp` needed.** It's a dev dependency resolved from
-  `node_modules/.bin`, so teammates only need Node and pnpm. (VoidZero's own
-  templates assume a global `vp` — that also works, it's just not required.)
-- **Config lives in `vite.config.ts`**, in `fmt` / `lint` / `test` / `check`
-  blocks — not `.oxfmtrc` / `.oxlintrc`. Use `defineConfig` from `vite-plus`.
-- **Deduplicate Vite.** SvelteKit's peers pull a real `vite`, while Vite+ wants
-  `@voidzero-dev/vite-plus-core`. Left alone you get two. Fix: a
-  `pnpm-workspace.yaml` override — `'vite@*': 'npm:@voidzero-dev/vite-plus-core@catalog:vite-plus'`.
-  The `vite-plus` catalog entry in the same file is the one place the version
-  lives; the devDependency is `"vite-plus": "catalog:"`. (Verified: a bogus
-  catalog version fails the install, so the override really follows it.)
-  A `vite` dev dependency alias isn't needed alongside it — the override alone
-  dedupes every consumer onto one `vite-plus-core` (`pnpm why vite` confirms
-  no second copy). `vp migrate` does add the alias, so a fork run through it
-  will have one; safe to drop.
-- **Tests import from `vite-plus/test`**, not `vitest` (not a direct dep) and not
-  `@voidzero-dev/vite-plus-test` (removed in 0.3.x). You can drop the `vitest`
-  dependency entirely.
-- **`vp check` runs the tools directly**, not through Vite — so it won't run
-  `svelte-kit sync` for you.
-- **An empty test suite fails.** `vp test` exits 1 when it finds no test
+- **No Vite+.** It ran Vite, Vitest, Oxlint and Oxfmt behind one `vp` command
+  and one config. It was dropped because the price outgrew the benefit. Every
+  `vite` consumer (SvelteKit, the adapter, Vitest) had to be redirected to
+  `@voidzero-dev/vite-plus-core` by a `pnpm-workspace.yaml` override, which then
+  needed `peerDependencyRules.allowAny: [vite]`, so pnpm stopped checking Vite
+  peer ranges. With format and lint at defaults, the one config had nothing left
+  to unify. The standalone tools are the same binaries, are tracked by Dependabot
+  one by one, and need no override.
+- **Oxlint runs on flags, not a config file.** `--type-aware --import-plugin
+  --deny-warnings` in the `lint` script. The `typescript`, `unicorn` and `oxc`
+  plugins and the `correctness` category are on by default, and
+  `--deny-warnings` makes them fail the check. It reads `.gitignore`, so
+  generated files are skipped without ignore patterns.
+- **Type-aware lint needs `oxlint-tsgolint` as a direct dependency.** Oxlint
+  doesn't install it. Without it, `--type-aware` fails with "Failed to find
+  tsgolint executable". Oxlint's `typeCheck` option isn't used: `svelte-check`
+  already type-checks.
+- **Oxfmt skips `.svelte` unless told.** That needs a config file, since it reads
+  no `package.json` key, hence the one-line `.oxfmtrc.json`. (Oxfmt reads the
+  `fmt` block of `vite.config.ts` only when launched by Vite+.)
+- **An old lockfile keeps Vite+.** `oxlint` and `oxfmt` list `vite-plus` as an
+  optional peer, so a lockfile that already resolved it keeps installing it after
+  the devDependency is removed. `pnpm dedupe` doesn't clear it. Regenerate the
+  lockfile.
+- **An empty test suite fails.** `vitest run` exits 1 when it finds no test
   files, so a fork that removes the tests breaks CI until it adds one back (or
   sets `passWithNoTests` while it has none).
 - **No Vitest guard needed on `adapter-cloudflare` 8.0.0+.** Earlier
@@ -134,13 +138,12 @@ Useful if you're extending this — human or agent.
   TypeScript program. `"checkJs": false` in `tsconfig.json` keeps `pnpm check`
   from reporting errors in generated output.
 - **Stay on `wrangler` — `cf` can't deploy SvelteKit yet.** Last tried with
-  `cf` 1.0.0-beta.12, Cloudflare's successor CLI. `cf migrate` turns
+  `cf` 1.0.0-beta.12, Cloudflare's successor CLI, after the switch to plain Vite. `cf migrate` turns
   `wrangler.jsonc` into a typed `cloudflare.config.ts`, and `cf workers types`
   replaces `wrangler types`. With the default Wrangler bundler, `assets.directory`
   moves to a separate `wrangler.config.ts`. With `--bundler vite`, it has nowhere
-  to go and is left as a TODO. Either way, `cf deploy` fails twice over. It runs
-  `pnpm vite build`, this project has only `vp`, and the config can't name
-  another build command. Even when the build succeeds, `cf deploy` uploads only
+  to go and is left as a TODO. Either way, `cf deploy` fails. Its `pnpm vite build`
+  now succeeds (it failed while this project used Vite+), but `cf deploy` uploads only
   cf's own Build Output (`.cloudflare/output/v0/`), and `adapter-cloudflare`
   doesn't write it. `--prebuilt` fails the same way. For Vite projects that
   output comes from `@cloudflare/vite-plugin`, and SvelteKit doesn't build

@@ -3,7 +3,7 @@
  * slug, frontmatter is present and stripped from the rendered HTML, docs are ordered, and
  * heading ids stay unique — including across non-Latin scripts.
  */
-import { describe, expect, it } from "vite-plus/test";
+import { describe, expect, it } from "vitest";
 import { docs, getDoc, renderMarkdown } from "./docs";
 
 describe("docs", () => {

@@ -1,14 +1,13 @@
 /** @prose
  * # Build config
  *
- * One [`vite-plus`](https://vite-plus.dev) config drives dev, build, format, lint and test —
- * `vp <script>` in `package.json` reads whichever of the sections below its command needs.
+ * One Vite config drives dev, build and test: SvelteKit's options and Vitest's.
+ * Formatting and linting run outside Vite, as `oxfmt` and `oxlint` in `package.json`.
+ * Why not Vite+: see `src/content/lessons.md`.
  */
-import { defineConfig } from "vite-plus";
+import { defineConfig } from "vitest/config";
 import adapter from "@sveltejs/adapter-cloudflare";
 import { sveltekit } from "@sveltejs/kit/vite";
-
-const generated = [".svelte-kit/**", "build/**", "worker-configuration.d.ts"];
 
 export default defineConfig({
   plugins: [
@@ -33,26 +32,8 @@ export default defineConfig({
     }),
   ],
 
-  // Oxfmt's defaults — `vp fmt` / `vp check`. Only what to skip is set; the
-  // empty `svelte` block is what turns on .svelte formatting.
-  fmt: {
-    svelte: {},
-    ignorePatterns: [...generated, "pnpm-lock.yaml"],
-  },
-
-  // Oxlint — `vp lint` / `vp check`. Lints .ts/.js only; `.svelte` type + a11y
-  // diagnostics come from `svelte-check`, run by `pnpm check`.
-  lint: {
-    plugins: ["typescript", "unicorn", "import"],
-    categories: { correctness: "error" },
-    options: { typeAware: true, typeCheck: true },
-    ignorePatterns: generated,
-  },
-
-  // Vitest — `vp test`.
+  // Vitest — `pnpm test`.
   test: {
     expect: { requireAssertions: true },
-    environment: "node",
-    include: ["src/**/*.{test,spec}.{js,ts}"],
   },
 });

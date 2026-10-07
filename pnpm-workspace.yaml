@@ -9,13 +9,3 @@ minimumReleaseAge: 0
 allowBuilds:
   esbuild: true
   workerd: true
-
-# Collapse every `vite` in the tree onto Vite+'s core build — see
-# src/content/lessons.md. It follows the `vite-plus` catalog entry below, so
-# one line bumps both.
-overrides:
-  "vite@*": "npm:@voidzero-dev/vite-plus-core@catalog:vite-plus"
-
-# One Vite+ version for the `vite-plus` devDependency (`catalog:`) and the override.
-catalog:
-  vite-plus: 1.0.0

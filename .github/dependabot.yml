@@ -16,9 +16,13 @@ updates:
           - svelte
           - svelte-check
           - typescript
-      vite-plus:
+      toolchain:
         patterns:
-          - vite-plus
+          - vite
+          - vitest
+          - oxlint
+          - oxlint-tsgolint
+          - oxfmt
       minor-and-patch:
         update-types:
           - minor
