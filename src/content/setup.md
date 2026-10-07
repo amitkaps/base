@@ -82,7 +82,7 @@ on the repo.
 ## 5. Tighten the supply chain
 
 This starter ships `minimumReleaseAge: 0` in `pnpm-workspace.yaml` so it can
-track the newest SvelteKit 3 / Vite+ releases. A real project wants a cooldown,
+track the newest SvelteKit 3 / Vite releases. A real project wants a cooldown,
 so freshly published versions are held back and a compromised release has time
 to be pulled:
 

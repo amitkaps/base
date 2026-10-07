@@ -33,7 +33,7 @@
   </main>
 
   <footer>
-    <span>SvelteKit · Vite+ · Cloudflare</span>
+    <span>SvelteKit · Vite · Cloudflare</span>
     <a href="https://github.com/amitkaps/base">github.com/amitkaps/base</a>
   </footer>
 </div>

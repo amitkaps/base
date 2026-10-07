@@ -10,16 +10,16 @@ config files carry the weight: **`vite.config.ts`** (dev + toolchain) and
 
 ## What's in it
 
-| Layer      | Choice                         | Why                                                 |
-| ---------- | ------------------------------ | --------------------------------------------------- |
-| Framework  | SvelteKit 3 + Svelte 5         | Runes, prerendered by default                       |
-| Toolchain  | Vite+ (`vp`)                   | Vite, Vitest, Oxlint, Oxfmt, tsc behind one command |
-| Language   | TypeScript                     | —                                                   |
-| Validation | Zod 4                          | Validates the parsed docs in `src/lib/docs.ts`      |
-| Content    | `import.meta.glob` + markz     | Markdown pages, no plugin, no codegen               |
-| Styling    | Plain CSS                      | Tokens in `src/app.css`, no framework               |
-| Deploy     | `@sveltejs/adapter-cloudflare` | Cloudflare Workers                                  |
-| CI/CD      | GitHub Actions                 | Checks on every PR, deploy on merge to `main`       |
+| Layer      | Choice                         | Why                                            |
+| ---------- | ------------------------------ | ---------------------------------------------- |
+| Framework  | SvelteKit 3 + Svelte 5         | Runes, prerendered by default                  |
+| Toolchain  | Vite, Vitest, Oxlint, Oxfmt    | Each standalone, at defaults; no wrapper       |
+| Language   | TypeScript                     | —                                              |
+| Validation | Zod 4                          | Validates the parsed docs in `src/lib/docs.ts` |
+| Content    | `import.meta.glob` + markz     | Markdown pages, no plugin, no codegen          |
+| Styling    | Plain CSS                      | Tokens in `src/app.css`, no framework          |
+| Deploy     | `@sveltejs/adapter-cloudflare` | Cloudflare Workers                             |
+| CI/CD      | GitHub Actions                 | Checks on every PR, deploy on merge to `main`  |
 
 No UI library is bundled — add the one you want (Bits UI, Melt, your own) when
 you need it.
@@ -31,19 +31,22 @@ you need it.
 | `pnpm dev`    | dev server on <http://localhost:5173>                       |
 | `pnpm build`  | production build for Cloudflare                             |
 | `pnpm check`  | format + lint + typecheck + `.svelte` type/a11y diagnostics |
-| `pnpm test`   | unit tests (Vitest, via `vp test`)                          |
+| `pnpm test`   | unit tests (Vitest)                                         |
 | `pnpm deploy` | build + `wrangler deploy` (normally left to CI)             |
 
-`pnpm check` runs two passes because Oxlint doesn't parse `.svelte`: `vp check`
-covers `.ts`/`.js`, `svelte-check` covers components. Oxfmt _does_ format
-`.svelte`. Both are behind the one command.
+`pnpm check` chains Oxfmt, Oxlint and `svelte-check`. Oxlint lints `.ts`, `.js`
+and the `<script>` of `.svelte` files, with type-aware rules on. `svelte-check`
+does the type checking and the template and a11y diagnostics. Each tool runs at
+its defaults, set by flags in `package.json`. The one config file is
+`.oxfmtrc.json`, because Oxfmt only formats `.svelte` when it's told to.
 
 Escape hatches, when you want them directly:
 
 ```sh
-pnpm exec vp check --fix   # write the formatting/lint fixes
-pnpm exec vp test          # watch mode
-pnpm exec vp preview       # run the built worker locally
+pnpm fix                   # write the formatting/lint fixes
+pnpm lint                  # Oxlint alone
+pnpm exec vitest           # watch mode
+pnpm exec vite preview     # run the built worker locally
 ```
 
 `prepare` (on every `pnpm install`) runs `svelte-kit sync` and `wrangler types`,
@@ -61,13 +64,14 @@ src/
   routes/
     +page.svelte            home — links to the docs
     [slug]/                 renders one doc; prerendered from docs list
-vite.config.ts             SvelteKit + Vite+ (fmt / lint / test) config
+vite.config.ts             SvelteKit + Vitest config
+.oxfmtrc.json              turns on Oxfmt for .svelte
 wrangler.jsonc             Cloudflare deploy config
 ```
 
 Import helpers, schemas and docs from `#lib`; components and assets directly as
 `#lib/components/X.svelte` (see `package.json` `imports`).
 
-SvelteKit 3 and Vite+ are pre-release, so this repo tracks their releases
+SvelteKit 3 and the Oxc tools move fast, so this repo tracks their releases
 closely — see `upgrade.md` (`/upgrade`) for the rhythm, and `setup.md`
 (`/setup`) for the supply-chain settings a real project should tighten.

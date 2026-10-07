@@ -8,9 +8,6 @@ node_modules
 /.svelte-kit
 /build
 
-# Vite+
-/.vite
-
 # OS
 .DS_Store
 Thumbs.db
