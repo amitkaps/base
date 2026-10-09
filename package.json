@@ -19,7 +19,7 @@
     "prepare": "svelte-kit sync && wrangler types"
   },
   "devDependencies": {
-    "@amitkaps/markz": "^0.3.0",
+    "@amitkaps/markz": "^0.4.0",
     "@amitkaps/prose": "^0.4.0",
     "@sveltejs/adapter-cloudflare": "^8.0.0",
     "@sveltejs/kit": "^3.0.1",
@@ -30,9 +30,9 @@
     "svelte": "^5.57.2",
     "svelte-check": "^4.7.6",
     "typescript": "^6.0.3",
-    "vite": "^8.3.3",
+    "vite": "^8.3.4",
     "vitest": "^5.0.3",
-    "wrangler": "^4.148.0",
+    "wrangler": "^4.149.0",
     "zod": "^4.6.5"
   },
   "devEngines": {
