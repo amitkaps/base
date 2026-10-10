@@ -1,6 +1,6 @@
 ---
 title: Upgrade
-summary: "Keep a fork current: Dependabot, manual bumps, re-syncing with upstream."
+summary: "Keep a fork current: bumps, smoke tests, re-syncing with upstream."
 order: 3
 ---
 
@@ -10,22 +10,16 @@ as soon as pnpm's one-day wait has passed, so bumps land often.
 
 ## The rhythm
 
-- **Weekly** — Dependabot opens grouped PRs. Skim, merge the safe ones (below).
 - **Monthly** — `pnpm outdated`; bump SvelteKit deliberately and smoke-test.
-  Vite+ isn't bumped here: it moves in every repository at once, from
-  [ship](https://ship.amitkaps.com), with its override in `pnpm-workspace.yaml`.
+  Vite+ and the workflow actions aren't bumped here: they move in every
+  repository at once, from [ship](https://ship.amitkaps.com), whose survey
+  flags a repository that's behind. Vite+'s override in `pnpm-workspace.yaml`
+  moves with it.
 - **Every bump** — CI must be green before merge. Strict branch protection on
   `main` enforces this and auto-rebases the other open PRs after each merge.
 
-## Dependabot PRs
-
-Groups are defined in `.github/dependabot.yml`:
-
-| Group             | Contents                                  | How to handle                           |
-| ----------------- | ----------------------------------------- | --------------------------------------- |
-| `minor-and-patch` | any minor/patch bump of a leaf dependency | merge on green CI                       |
-| `sveltekit`       | `@sveltejs/*`, `svelte`, `svelte-check`   | pull the branch, smoke-test, then merge |
-| github-actions    | workflow action versions                  | merge on green CI                       |
+There's no Dependabot: every pull request it opened duplicated ship's survey.
+A fork that doesn't follow ship can add a `.github/dependabot.yml` of its own.
 
 Smoke-test = `pnpm install && pnpm dev`, click through `/` and one doc page,
 then `pnpm build`.
