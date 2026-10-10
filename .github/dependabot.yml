@@ -9,6 +9,9 @@ updates:
       # Kit 3 and svelte-check don't support TypeScript 7 yet — see lessons.md.
       - dependency-name: typescript
         update-types: ["version-update:semver-major"]
+      # Vite+ moves in every repository at once, with its override in
+      # pnpm-workspace.yaml, which Dependabot doesn't edit — see upgrade.md.
+      - dependency-name: vite-plus
     groups:
       sveltekit:
         patterns:
@@ -16,13 +19,6 @@ updates:
           - svelte
           - svelte-check
           - typescript
-      toolchain:
-        patterns:
-          - vite
-          - vitest
-          - oxlint
-          - oxlint-tsgolint
-          - oxfmt
       minor-and-patch:
         update-types:
           - minor

@@ -11,8 +11,9 @@ no release cooldown), so bumps land often.
 ## The rhythm
 
 - **Weekly** — Dependabot opens grouped PRs. Skim, merge the safe ones (below).
-- **Monthly** — `pnpm outdated`; bump the toolchain (Vite, Vitest, Oxc, SvelteKit)
-  deliberately and smoke-test.
+- **Monthly** — `pnpm outdated`; bump SvelteKit deliberately and smoke-test.
+  Vite+ isn't bumped here: it moves in every repository at once, from
+  [ship](https://ship.amitkaps.com), with its override in `pnpm-workspace.yaml`.
 - **Every bump** — CI must be green before merge. Strict branch protection on
   `main` enforces this and auto-rebases the other open PRs after each merge.
 
@@ -24,7 +25,6 @@ Groups are defined in `.github/dependabot.yml`:
 | ----------------- | ----------------------------------------- | --------------------------------------- |
 | `minor-and-patch` | any minor/patch bump of a leaf dependency | merge on green CI                       |
 | `sveltekit`       | `@sveltejs/*`, `svelte`, `svelte-check`   | pull the branch, smoke-test, then merge |
-| `toolchain`       | `vite`, `vitest`, `oxlint*`, `oxfmt`      | pull the branch, smoke-test, then merge |
 | github-actions    | workflow action versions                  | merge on green CI                       |
 
 Smoke-test = `pnpm install && pnpm dev`, click through `/` and one doc page,

@@ -10,7 +10,7 @@ already wired.
 ## 1. Rename
 
 - `package.json` → `name`
-- `wrangler.jsonc` → `name` (this becomes the Workers subdomain)
+- `wrangler.toml` → `name` (this becomes the Workers subdomain)
 - the docs in `src/content/` (`stack.md`, `setup.md`, `upgrade.md`,
   `lessons.md`) — make them yours. Each carries its `title`, `summary` and nav
   `order` in frontmatter
@@ -21,7 +21,7 @@ Deploys come from Cloudflare's Git integration (Workers Builds), not from
 GitHub Actions, so there's no API token or secret to keep.
 
 1. In the Cloudflare dashboard, create a Worker connected to this GitHub
-   repo. Its name must match `name` in `wrangler.jsonc`.
+   repo. Its name must match `name` in `wrangler.toml`.
 2. Set its build settings. They're the same in every project, because the
    steps themselves live in `package.json`:
 
@@ -50,7 +50,7 @@ The Worker is reachable at `<name>.<your-subdomain>.workers.dev`.
 
 ## 3. Custom domain
 
-`wrangler.jsonc` has a `routes` entry mapping the Worker to a hostname. Point it
+`wrangler.toml` has a `routes` entry mapping the Worker to a hostname. Point it
 at your domain (the zone must be on the same Cloudflare account) — Cloudflare
 creates the DNS record and certificate on the next deploy:
 
