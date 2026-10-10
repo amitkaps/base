@@ -11,6 +11,7 @@
     "dev": "vp dev",
     "prose": "prose",
     "build": "vp build",
+    "preview": "vp preview",
     "check": "svelte-kit sync && wrangler types && vp check && svelte-check --tsconfig ./tsconfig.json",
     "fix": "vp check --fix",
     "test": "vp test --run",
