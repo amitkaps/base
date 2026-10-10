@@ -15,7 +15,8 @@
     "lint": "oxlint --type-aware --import-plugin --deny-warnings",
     "fix": "oxfmt && pnpm lint --fix",
     "test": "vitest run",
-    "deploy": "vite build && wrangler deploy",
+    "verify": "pnpm check && pnpm test && pnpm build",
+    "ship": "wrangler deploy",
     "prepare": "svelte-kit sync && wrangler types"
   },
   "devDependencies": {
@@ -39,7 +40,7 @@
     "packageManager": {
       "name": "pnpm",
       "version": "12.9.1",
-      "onFail": "error"
+      "onFail": "download"
     },
     "runtime": {
       "name": "node",
