@@ -9,3 +9,13 @@ minimumReleaseAge: 0
 allowBuilds:
   esbuild: true
   workerd: true
+
+# Collapse every `vite` in the tree onto Vite+'s core build. Bump this alongside the
+# `vite-plus` devDependency, in every repository at once.
+overrides:
+  "vite@*": "npm:@voidzero-dev/vite-plus-core@1.1.0"
+
+# Vite+'s Vite is an npm alias, so pnpm can't check it against the usual `vite` peer ranges.
+peerDependencyRules:
+  allowAny:
+    - vite

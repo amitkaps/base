@@ -1,13 +1,15 @@
 /** @prose
  * # Build config
  *
- * One Vite config drives dev, build and test: SvelteKit's options and Vitest's.
- * Formatting and linting run outside Vite, as `oxfmt` and `oxlint` in `package.json`.
- * Why not Vite+: see `src/content/lessons.md`.
+ * One [`vite-plus`](https://vite-plus.dev) config drives dev, build, format, lint and test.
+ * `vp <command>` in `package.json` reads whichever section it needs. base follows the standard at
+ * [ship](https://ship.amitkaps.com), so its toolchain is the one every repository shares.
  */
-import { defineConfig } from "vitest/config";
+import { defineConfig } from "vite-plus";
 import adapter from "@sveltejs/adapter-cloudflare";
 import { sveltekit } from "@sveltejs/kit/vite";
+
+const generated = [".svelte-kit/**", "build/**", "worker-configuration.d.ts"];
 
 export default defineConfig({
   plugins: [
@@ -32,7 +34,23 @@ export default defineConfig({
     }),
   ],
 
-  // Vitest — `pnpm test`.
+  // Oxfmt's defaults — `vp fmt` / `vp check`. The empty `svelte` block is what turns on
+  // .svelte formatting.
+  fmt: {
+    svelte: {},
+    ignorePatterns: generated,
+  },
+
+  // Oxlint — `vp lint` / `vp check`. It lints .ts and .js; `.svelte` types and a11y come
+  // from `svelte-check`, which `pnpm check` runs after it.
+  lint: {
+    plugins: ["typescript", "unicorn", "import"],
+    categories: { correctness: "error" },
+    options: { typeAware: true, typeCheck: true },
+    ignorePatterns: generated,
+  },
+
+  // Vitest — `vp test`.
   test: {
     expect: { requireAssertions: true },
   },

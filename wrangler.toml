@@ -1,0 +1,21 @@
+# @prose
+# # How the site is deployed
+#
+# The Worker that serves the site: SvelteKit's adapter writes the Worker and its static files
+# into `.svelte-kit/cloudflare`, and `wrangler deploy` uploads them. This stays on wrangler
+# until cf can deploy SvelteKit ([lessons](src/content/lessons.md#cloudflare)).
+#
+# The custom domain needs the `amitkaps.com` zone on the same Cloudflare account. Cloudflare
+# creates the DNS record and the certificate on the first deploy.
+
+name = "base"
+compatibility_date = "2026-09-09"
+compatibility_flags = ["nodejs_als"]
+main = ".svelte-kit/cloudflare/_worker.js"
+workers_dev = true
+preview_urls = true
+routes = [{ pattern = "base.amitkaps.com", custom_domain = true }]
+
+[assets]
+binding = "ASSETS"
+directory = ".svelte-kit/cloudflare"
