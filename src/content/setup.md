@@ -92,17 +92,18 @@ on the repo.
 
 ## 5. Tighten the supply chain
 
-This starter ships `minimumReleaseAge: 0` in `pnpm-workspace.yaml` so it can
-track the newest SvelteKit 3 / Vite releases. A real project wants a cooldown,
-so freshly published versions are held back and a compromised release has time
-to be pulled:
+pnpm holds back a version for a day after it's published (its default
+`minimumReleaseAge`), so a compromised release has time to be pulled. This
+starter keeps that default, and `pnpm-workspace.yaml` lets only our own
+packages skip it, since each reaches npm only after a 2FA approval:
 
 ```yaml
-minimumReleaseAge: 1440 # minutes (24h)
+minimumReleaseAgeExclude:
+  - "@amitkaps/*"
 ```
 
-This is the one setting to change first on a fork. It's the only place the
-cooldown is configured or documented.
+A fork that depends on none of them can drop the exclusion. It's the only
+place the cooldown is configured or documented.
 
 ---
 

@@ -5,8 +5,8 @@ order: 3
 ---
 
 `setup.md` is one-time. This is the recurring part: keeping a fork current
-without breaking it. The stack tracks the latest releases (SvelteKit 3, Vite 8,
-no release cooldown), so bumps land often.
+without breaking it. The stack tracks the latest releases (SvelteKit 3, Vite 8),
+as soon as pnpm's one-day wait has passed, so bumps land often.
 
 ## The rhythm
 
