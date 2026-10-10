@@ -1,7 +1,7 @@
 <script lang="ts">
   /** @prose
-   * The home page: a card per doc, linking into the `[slug]` route. `docs` is already
-   * sorted by frontmatter `order`, so the grid needs no sorting of its own.
+   * The home page: a card per doc, linking into the `docs/[slug].md` route. `docs` is already
+   * in the nav's order, so the grid needs no sorting of its own.
    */
   import { docs } from "#lib";
 </script>
@@ -9,7 +9,7 @@
 <!-- @prose
 ## Doc cards
 
-Each card links to `/{slug}`; the title and summary come straight from that page's
+Each card links to `/docs/{slug}.md`, the doc's own path; the title and summary come straight from that page's
 frontmatter, so this list never drifts from the pages it links to.
 -->
 <h1>base</h1>
@@ -17,7 +17,7 @@ frontmatter, so this list never drifts from the pages it links to.
 
 <div class="cards">
   {#each docs as doc (doc.slug)}
-    <a class="card" href="/{doc.slug}">
+    <a class="card" href="/docs/{doc.slug}.md">
       <strong>{doc.title}</strong>
       <span>{doc.summary}</span>
     </a>

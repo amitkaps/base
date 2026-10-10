@@ -1,7 +1,6 @@
 ---
-title: Stack
+title: Design
 summary: "Every piece in the starter, and why it was chosen."
-order: 1
 ---
 
 An opinionated, kept-current base for SvelteKit apps on Cloudflare Workers. Two
@@ -58,14 +57,16 @@ generated, not committed.
 ## Layout
 
 ```
+docs/
+  README.md                the docs' order, as nav in its metadata
+  *.md                     these docs — the site's pages and the content demo
 src/
   app.css                  design tokens, reset, and prose (dark)
-  content/*.md              these four docs — the content demo
   lib/
-    docs.ts                 glob + markz + Zod — loads src/content, unit-tested
+    docs.ts                 glob + markz + Zod — loads docs/, unit-tested
   routes/
     +page.svelte            home — links to the docs
-    [slug]/                 renders one doc; prerendered from docs list
+    docs/[slug].md/         renders one doc at /docs/<file>.md; prerendered
 vite.config.ts             SvelteKit, format, lint and test config
 wrangler.toml              Cloudflare deploy config
 ```
@@ -74,5 +75,5 @@ Import helpers, schemas and docs from `#lib`; components and assets directly as
 `#lib/components/X.svelte` (see `package.json` `imports`).
 
 SvelteKit 3 and the Oxc tools move fast, so this repo tracks their releases
-closely — see `upgrade.md` (`/upgrade`) for the rhythm, and `setup.md`
-(`/setup`) for the supply-chain settings a real project should tighten.
+closely — see `upgrade.md` (`/docs/upgrade.md`) for the rhythm, and `setup.md`
+(`/docs/setup.md`) for the supply-chain settings a real project should tighten.

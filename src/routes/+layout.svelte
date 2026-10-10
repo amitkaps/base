@@ -3,8 +3,8 @@
    * # Shell
    *
    * The one layout every route renders inside: a header with the doc nav, the page content,
-   * and a footer. `docs` drives the nav directly, so a new page under `src/content/` appears
-   * in the header without touching this file.
+   * and a footer. `docs` drives the nav directly, so a new page in `docs/` appears in the
+   * header, in the nav's order, without touching this file.
    */
   import "../app.css";
   import favicon from "#lib/assets/favicon.svg";
@@ -23,7 +23,7 @@
     <a href="/" class="brand">base</a>
     <nav>
       {#each docs as doc (doc.slug)}
-        <a href="/{doc.slug}">{doc.title}</a>
+        <a href="/docs/{doc.slug}.md">{doc.title}</a>
       {/each}
     </nav>
   </header>

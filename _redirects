@@ -1,0 +1,6 @@
+# The docs moved from /stack, /setup, /upgrade and /lessons to /docs/<file>.md, so old links
+# still land. The Cloudflare adapter copies this file from the project root.
+/stack /docs/design.md 301
+/setup /docs/setup.md 301
+/upgrade /docs/upgrade.md 301
+/lessons /docs/lessons.md 301

@@ -13,11 +13,10 @@ Four commands are the daily interface: `dev`, `build`, `check`, `test`. Two
 more drive deploys: `verify` (check, test, build) and `ship` (upload the build).
 `pnpm prose` opens the repo as a document.
 
-The starter's own docs are its demo content — the markdown files under
-`src/content/`, each with a metadata block validated in
-[`src/lib/docs.ts`](src/lib/docs.ts), served at `/stack`, `/setup`,
-`/upgrade` and `/lessons`. Start with
-[`stack.md`](src/content/stack.md) to see what's in the box, then
-[`setup.md`](src/content/setup.md) to make it yours.
+The starter's own [docs](docs/README.md) are its demo content — the markdown
+files under `docs/`, each with a metadata block validated in
+[`src/lib/docs.ts`](src/lib/docs.ts), and served at the same paths, like
+`/docs/design.md`. Start with [`design.md`](docs/design.md) to see what's in
+the box, then [`setup.md`](docs/setup.md) to make it yours.
 
 Building on this? Start with [`AGENTS.md`](AGENTS.md).

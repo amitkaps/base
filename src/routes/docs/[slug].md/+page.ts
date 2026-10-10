@@ -1,7 +1,7 @@
 /** @prose
  * Loads one doc page by its `[slug]` param, and tells prerendering which slugs exist —
  * `entries` is how a dynamic route gets fully static output: without it, prerendering has no
- * way to discover `/stack`, `/setup`, etc. from an empty `[slug]` pattern alone.
+ * way to discover `/docs/design.md`, `/docs/setup.md`, etc. from the `[slug].md` pattern alone.
  */
 import { getDoc, docs } from "#lib";
 import { error } from "@sveltejs/kit";
