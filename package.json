@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vp dev",
-    "prose": "prose .",
+    "prose": "prose",
     "build": "vp build",
     "check": "svelte-kit sync && wrangler types && vp check && svelte-check --tsconfig ./tsconfig.json",
     "fix": "vp check --fix",
