@@ -1,6 +1,6 @@
 /** @prose
  * Covers the content pipeline in [`docs.ts`](docs.ts): every doc loads and resolves by
- * slug, frontmatter is present and stripped from the rendered HTML, docs are ordered, and
+ * slug, frontmatter is present and stripped from the rendered HTML, docs follow the nav, and
  * heading ids stay unique — including across non-Latin scripts.
  */
 import { describe, expect, it } from "vite-plus/test";
@@ -21,9 +21,15 @@ describe("docs", () => {
     }
   });
 
-  it("orders docs by their frontmatter order", () => {
-    const orders = docs.map((doc) => doc.order);
-    expect(orders).toEqual([...orders].sort((a, b) => a - b));
+  it("orders docs as docs/README.md's nav lists them", () => {
+    expect(docs.map((doc) => doc.slug)).toEqual([
+      "design",
+      "setup",
+      "upgrade",
+      "plan",
+      "lessons",
+      "development",
+    ]);
   });
 
   it("strips frontmatter before rendering", () => {

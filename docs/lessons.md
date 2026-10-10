@@ -1,7 +1,6 @@
 ---
 title: Lessons
 summary: "SvelteKit 3 + Vite + Cloudflare gotchas found building this — for humans and agents."
-order: 4
 ---
 
 What it actually took to wire SvelteKit 3 + Vite + Cloudflare together.
@@ -98,19 +97,21 @@ Useful if you're extending this — human or agent.
 
 ## Content
 
-- Chose `import.meta.glob('/src/content/*.md', { query: '?raw', eager: true })` +
+- Chose `import.meta.glob('/docs/*.md', { query: '?raw', eager: true })` +
   [`@amitkaps/markz`](https://markz.amitkaps.com) over Content Collections: no
   config file, no codegen step, no sync ordering. It all lives in `src/lib/docs.ts`.
-- **Each page's metadata is a `---` block** — `title`, `summary`, `order` — read
-  by markz and validated by a Zod schema. The slug is the filename. Adding a page
+- **Each page's metadata is a `---` block** — `title` and `summary` — read
+  by markz and validated by a Zod schema. The slug is the filename, and the
+  order is `docs/README.md`'s `nav`, which GitHub and prose read too. Adding a page
   is adding one file, and a missing or mistyped key fails the build naming the
   file. Extend the schema for more fields.
 - **markz's metadata is a flat `key: value` block**, not full YAML: no nesting,
   lists only as `[a, b]`, and a value YAML would read differently (`no`, a bare
   date) warns rather than guessing. Quote it.
 - **One parser replaces `marked`, `yaml` and the glue.** markz also gives heading
-  ids (unique per page, any script) and curly punctuation, which used to be a
-  custom renderer and a `walkTokens` pass.
+  ids (unique per page, any script), which used to be a custom renderer and a
+  `walkTokens` pass. Since markz 0.4.0 it keeps quotes and dashes as typed, so
+  type the character you want.
 - **Any markz warning fails the build.** It keeps unsupported syntax (raw HTML,
   `*emphasis*`, `__strong__`, reference links, bare URLs, ...) as literal text and
   warns, so `render` in `src/lib/docs.ts` throws with the file, line and the form to

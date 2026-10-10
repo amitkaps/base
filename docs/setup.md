@@ -1,7 +1,6 @@
 ---
 title: Setup
 summary: "Make it yours: Cloudflare, branch protection, supply chain."
-order: 2
 ---
 
 One-time steps to turn this starter into a real project. Everything else is
@@ -11,9 +10,9 @@ already wired.
 
 - `package.json` → `name`
 - `wrangler.toml` → `name` (this becomes the Workers subdomain)
-- the docs in `src/content/` (`stack.md`, `setup.md`, `upgrade.md`,
-  `lessons.md`) — make them yours. Each carries its `title`, `summary` and nav
-  `order` in frontmatter
+- the docs in `docs/` (`design.md`, `setup.md`, `upgrade.md`, `plan.md`,
+  `lessons.md`, `development.md`) — make them yours. Each carries its `title`
+  and `summary` in frontmatter, and `docs/README.md`'s `nav` sets their order
 
 ## 2. Cloudflare
 

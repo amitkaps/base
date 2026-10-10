@@ -2,7 +2,7 @@
 # package.json#pnpm) — this is a settings file, not a workspace.
 
 # pnpm's default one-day wait on new versions is kept, and only our own
-# packages skip it — see src/content/setup.md §5.
+# packages skip it — see docs/setup.md §5.
 minimumReleaseAgeExclude:
   - "@amitkaps/*"
 

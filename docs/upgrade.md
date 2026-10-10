@@ -1,7 +1,6 @@
 ---
 title: Upgrade
 summary: "Keep a fork current: bumps, smoke tests, re-syncing with upstream."
-order: 3
 ---
 
 `setup.md` is one-time. This is the recurring part: keeping a fork current
