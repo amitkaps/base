@@ -26,15 +26,16 @@ you need it.
 
 ## Seven commands
 
-| Command       | Does                                                        |
-| ------------- | ----------------------------------------------------------- |
-| `pnpm dev`    | dev server on <http://localhost:5173>                       |
-| `pnpm build`  | production build for Cloudflare                             |
-| `pnpm check`  | format + lint + typecheck + `.svelte` type/a11y diagnostics |
-| `pnpm fix`    | writes the format and lint fixes                            |
-| `pnpm test`   | unit tests (Vitest, through `vp test`)                      |
-| `pnpm verify` | `check` + `test` + `build`: what CI and every deploy run    |
-| `pnpm ship`   | `wrangler deploy` of the last build (normally left to CD)   |
+| Command        | Does                                                        |
+| -------------- | ----------------------------------------------------------- |
+| `pnpm dev`     | dev server on <http://localhost:5173>                       |
+| `pnpm build`   | production build for Cloudflare                             |
+| `pnpm preview` | runs the built Worker locally                               |
+| `pnpm check`   | format + lint + typecheck + `.svelte` type/a11y diagnostics |
+| `pnpm fix`     | writes the format and lint fixes                            |
+| `pnpm test`    | unit tests (Vitest, through `vp test`)                      |
+| `pnpm verify`  | `check` + `test` + `build`: what CI and every deploy run    |
+| `pnpm ship`    | `wrangler deploy` of the last build (normally left to CD)   |
 
 `pnpm check` runs `vp check`, then `svelte-check`. `vp check` formats, lints
 and type-checks the `.ts` and `.js`, from the `fmt` and `lint` blocks of
@@ -47,7 +48,6 @@ Escape hatches, when you want them directly:
 ```sh
 pnpm exec vp lint          # lint alone
 pnpm exec vp test          # watch mode
-pnpm exec vp preview       # run the built worker locally
 ```
 
 `prepare` (on every `pnpm install`) runs `svelte-kit sync` and `wrangler types`,
