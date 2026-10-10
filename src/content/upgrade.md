@@ -44,18 +44,18 @@ entries to keep in step.
 
 ```sh
 pnpm install
-pnpm check && pnpm test && pnpm build
+pnpm verify
 ```
 
 `pnpm install` regenerates `worker-configuration.d.ts` via `prepare`, so a
-`wrangler` bump needs nothing extra. Deploy happens on merge to `main`; confirm
+`wrangler` bump needs nothing extra. Workers Builds deploys on merge to `main`; confirm
 `base.<subdomain>.workers.dev` and the custom domain still serve.
 
 ## Node & pnpm
 
 Bump `package.json` — `devEngines`, `engines.node` and `packageManager` together.
-CI reads `engines.node` and `packageManager` (via `pnpm/action-setup`), and
-`devEngines` makes a local mismatch fail the install instead of drifting.
+CI reads `engines.node` and `packageManager` (via `pnpm/action-setup`). A newer
+global pnpm doesn't matter: `devEngines` downloads and runs the pinned one.
 
 ## Re-syncing a fork with upstream
 

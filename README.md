@@ -9,7 +9,8 @@ pnpm install
 pnpm dev
 ```
 
-Five commands are the whole interface: `dev`, `build`, `check`, `test`, `deploy`.
+Four commands are the daily interface: `dev`, `build`, `check`, `test`. Two
+more drive deploys: `verify` (check, test, build) and `ship` (upload the build).
 `pnpm prose` opens the repo as a document.
 
 The starter's own docs are its demo content — the markdown files under

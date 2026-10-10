@@ -1,5 +1,7 @@
 name: CI
 
+# Checks only. Deploys come from Cloudflare's Git integration (Workers Builds),
+# which runs the same `pnpm run verify` before `pnpm run ship`.
 on:
   push:
     branches: [main]
@@ -16,7 +18,6 @@ permissions:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    environment: production
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -27,19 +28,5 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Check (format, lint, typecheck, svelte)
-        run: pnpm run check
-
-      - name: Unit tests
-        run: pnpm test
-
-      - name: Build (Cloudflare adapter)
-        run: pnpm build
-
-      - name: Deploy to Cloudflare Workers
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
+      - name: Verify (check, test, build)
+        run: pnpm run verify

@@ -19,12 +19,13 @@ config files carry the weight: **`vite.config.ts`** (dev + toolchain) and
 | Content    | `import.meta.glob` + markz     | Markdown pages, no plugin, no codegen          |
 | Styling    | Plain CSS                      | Tokens in `src/app.css`, no framework          |
 | Deploy     | `@sveltejs/adapter-cloudflare` | Cloudflare Workers                             |
-| CI/CD      | GitHub Actions                 | Checks on every PR, deploy on merge to `main`  |
+| CI         | GitHub Actions                 | Checks on every PR and push to `main`          |
+| CD         | Workers Builds (Git)           | Deploys `main`, previews other branches        |
 
 No UI library is bundled — add the one you want (Bits UI, Melt, your own) when
 you need it.
 
-## Five commands
+## Six commands
 
 | Command       | Does                                                        |
 | ------------- | ----------------------------------------------------------- |
@@ -32,7 +33,8 @@ you need it.
 | `pnpm build`  | production build for Cloudflare                             |
 | `pnpm check`  | format + lint + typecheck + `.svelte` type/a11y diagnostics |
 | `pnpm test`   | unit tests (Vitest)                                         |
-| `pnpm deploy` | build + `wrangler deploy` (normally left to CI)             |
+| `pnpm verify` | `check` + `test` + `build`: what CI and every deploy run    |
+| `pnpm ship`   | `wrangler deploy` of the last build (normally left to CD)   |
 
 `pnpm check` chains Oxfmt, Oxlint and `svelte-check`. Oxlint lints `.ts`, `.js`
 and the `<script>` of `.svelte` files, with type-aware rules on. `svelte-check`

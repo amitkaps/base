@@ -1,6 +1,6 @@
 ---
 title: Setup
-summary: "Make it yours: Cloudflare, secrets, branch protection."
+summary: "Make it yours: Cloudflare, branch protection, supply chain."
 order: 2
 ---
 
@@ -17,23 +17,34 @@ already wired.
 
 ## 2. Cloudflare
 
-1. Create an API token at
-   <https://dash.cloudflare.com/profile/api-tokens> with the **Edit Cloudflare
-   Workers** template.
-2. Get your **Account ID** from any zone's overview page (or `wrangler whoami`).
-3. Add both as GitHub Actions secrets (repo → Settings → Secrets and variables →
-   Actions):
-   - `CLOUDFLARE_API_TOKEN`
-   - `CLOUDFLARE_ACCOUNT_ID`
-4. Optional: a `production` environment (Settings → Environments) lets you
-   require approval before deploys. The CI job already targets it.
+Deploys come from Cloudflare's Git integration (Workers Builds), not from
+GitHub Actions, so there's no API token or secret to keep.
 
-First manual deploy, if you want one before merging:
+1. In the Cloudflare dashboard, create a Worker connected to this GitHub
+   repo. Its name must match `name` in `wrangler.jsonc`.
+2. Set its build settings. They're the same in every project, because the
+   steps themselves live in `package.json`:
+
+   ```text
+   Build command    pnpm run verify
+   Deploy command   pnpm run ship
+   Root directory   /
+   NODE_VERSION     26
+   ```
+
+`verify` runs `check`, `test` and `build`, so a failing check stops the deploy.
+`ship` uploads what `verify` built. Each push to `main` deploys, and other
+branches get preview URLs.
+
+First manual deploy, if you want one before connecting the repo:
 
 ```sh
 pnpm exec wrangler login
-pnpm deploy
+pnpm run verify && pnpm run ship
 ```
+
+Write `pnpm run ship`, never `pnpm deploy`: `deploy` is a built-in pnpm command
+and never reaches a script.
 
 The Worker is reachable at `<name>.<your-subdomain>.workers.dev`.
 

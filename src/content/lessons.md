@@ -77,8 +77,10 @@ Useful if you're extending this — human or agent.
 
 ## Node & pnpm versions
 
-- **`package.json` is the one place.** `devEngines` (`runtime` + `packageManager`,
-  `onFail: error`) makes a wrong Node or pnpm fail the install loudly; `engines`
+- **`package.json` is the one place.** `devEngines.packageManager` uses
+  `onFail: download`, so pnpm fetches and runs the pinned version whatever is
+  installed globally, and a pnpm release never breaks a checkout.
+  `devEngines.runtime` keeps `onFail: error`, so a wrong Node fails loudly. `engines`
   and `packageManager` are what CI reads (`actions/setup-node` with
   `node-version-file: package.json`, and `pnpm/action-setup`). mise reads the
   same file when `idiomatic_version_file_enable_tools` is on, so there's no
@@ -158,6 +160,11 @@ Useful if you're extending this — human or agent.
 - `pnpm/action-setup` + `actions/setup-node` (`node-version-file: package.json`,
   `cache: pnpm`) is all the setup needed. Every step runs through `pnpm run …`,
   so no global tooling in CI either.
-- One job, not two: the deploy step is a guarded step at the end of `ci` rather
-  than a separate job, so the build isn't repeated and there's no artifact to
-  pass between jobs.
+- **CI checks; Cloudflare deploys.** Deploys come from the Git integration
+  (Workers Builds), not a `wrangler-action` step, so there's no API token or
+  secret to keep. Its dashboard holds two fixed commands, `pnpm run verify` and
+  `pnpm run ship`, and `package.json` decides what they run. `verify` fails on a
+  bad check, so a red build never deploys, and CI runs the same script.
+- **The deploy script is `ship`, not `deploy`.** `pnpm deploy` is a built-in pnpm
+  command (it copies a workspace package), so a `deploy` script only runs as
+  `pnpm run deploy`, and a slip runs the wrong thing.
