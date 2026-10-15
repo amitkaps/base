@@ -4,7 +4,7 @@ An opinionated, kept-current starter for SvelteKit apps deployed to Cloudflare
 Workers — SvelteKit 3 + Vite + Zod + plain CSS.
 
 ```sh
-# needs Node 26 + pnpm 12.8+ — package.json (devEngines) pins both
+# needs Node 26 — package.json (devEngines) pins it, and pnpm fetches its own pinned version
 pnpm install
 pnpm dev
 ```
