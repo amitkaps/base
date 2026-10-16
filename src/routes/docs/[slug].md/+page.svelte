@@ -1,5 +1,7 @@
 <script lang="ts">
   /** @prose
+   * # A doc page
+   *
    * One doc page, rendered from the `Doc` its `+page.ts` load resolved.
    */
   let { data } = $props();

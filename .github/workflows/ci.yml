@@ -1,7 +1,10 @@
-name: CI
-
+# @prose
+# # CI
+#
 # Checks only. Deploys come from Cloudflare's Git integration (Workers Builds),
 # which runs the same `pnpm run verify` before `pnpm run ship`.
+name: CI
+
 on:
   push:
     branches: [main]

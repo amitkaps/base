@@ -1,4 +1,6 @@
 /** @prose
+ * # The docs' tests
+ *
  * Covers the content pipeline in [`docs.ts`](docs.ts): every doc loads and resolves by
  * slug, frontmatter is present and stripped from the rendered HTML, docs follow the nav, and
  * heading ids stay unique — including across non-Latin scripts.

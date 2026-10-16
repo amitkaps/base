@@ -3,7 +3,7 @@
  *
  * Reads every Markdown file under `docs/`, validates its metadata, and renders it to
  * HTML with [markz](https://markz.amitkaps.com) — all at build time, so the rendered site never
- * ships a Markdown parser to the client or the Worker. Each exported [`Doc`](#doc) is one page:
+ * ships a Markdown parser to the client or the Worker. Each exported [`Doc`](#frontmatter-schema) is one page:
  * adding a page is adding a file and listing it in `docs/README.md`'s `nav`, since the slug
  * comes from the filename, the order from the nav, and everything else from its metadata block.
  * `docs/README.md` is the docs' index, not a page.
@@ -28,7 +28,7 @@ const index = import.meta.glob("/docs/README.md", {
 }) as Record<string, string>;
 
 /** @prose
- * ## The order
+ * # The order
  *
  * The docs' order is the `nav` list in `docs/README.md`'s metadata, the one GitHub, prose and
  * ship's standard read. A doc the nav leaves out fails the build, so no page goes missing from
@@ -41,7 +41,7 @@ const nav: string[] = (() => {
 })();
 
 /** @prose
- * ## Frontmatter schema
+ * # Frontmatter schema
  *
  * Extend this schema as pages need more fields (date, image, tags...). A file that does not
  * match fails the build with its path and the offending key — frontmatter errors are a build
@@ -58,7 +58,7 @@ export type Doc = z.infer<typeof frontmatterSchema> & {
 };
 
 /** @prose
- * ## Rendering a page
+ * # Rendering a page
  *
  * Parses a raw file with markz, validates its metadata block, and renders the body — one
  * function, called once per file at module load. markz never guesses at Markdown outside its
@@ -98,7 +98,7 @@ function render(path: string, source: string): Doc {
 }
 
 /** @prose
- * ## Links out of the docs
+ * # Links out of the docs
  *
  * A doc links to code by its repo path, like `../src/lib/docs.ts`, which works on GitHub. The
  * site serves only the docs, so such a link goes to the file on GitHub instead. A link to
@@ -113,7 +113,7 @@ const outward = (body: string): string =>
 export const renderMarkdown = (body: string): string => html(body);
 
 /** @prose
- * ## Public exports
+ * # Public exports
  *
  * `docs` is every page, rendered and sorted once at module load — routes read from this array
  * instead of re-rendering per request, since every route here is prerendered anyway. `getDoc`
