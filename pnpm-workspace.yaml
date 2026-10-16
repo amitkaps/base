@@ -1,3 +1,6 @@
+# @prose
+# # The workspace
+#
 # pnpm 12 reads project settings from here (moved out of .npmrc and
 # package.json#pnpm) — this is a settings file, not a workspace.
 

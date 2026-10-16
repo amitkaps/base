@@ -1,5 +1,7 @@
 <script lang="ts">
   /** @prose
+   * # The home page
+   *
    * The home page: a card per doc, linking into the `docs/[slug].md` route. `docs` is already
    * in the nav's order, so the grid needs no sorting of its own.
    */
@@ -7,7 +9,7 @@
 </script>
 
 <!-- @prose
-## Doc cards
+# Doc cards
 
 Each card links to `/docs/{slug}.md`, the doc's own path; the title and summary come straight from that page's
 frontmatter, so this list never drifts from the pages it links to.

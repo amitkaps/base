@@ -1,4 +1,6 @@
 /** @prose
+ * # Loading a doc
+ *
  * Loads one doc page by its `[slug]` param, and tells prerendering which slugs exist —
  * `entries` is how a dynamic route gets fully static output: without it, prerendering has no
  * way to discover `/docs/design.md`, `/docs/setup.md`, etc. from the `[slug].md` pattern alone.
