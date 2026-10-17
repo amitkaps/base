@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@amitkaps/markz": "^0.4.2",
-    "@amitkaps/prose": "^0.7.0",
+    "@amitkaps/prose": "^0.7.1",
     "@sveltejs/adapter-cloudflare": "^8.0.1",
     "@sveltejs/kit": "^3.1.0",
     "@types/node": "^26.6.5",
