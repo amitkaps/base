@@ -34,6 +34,9 @@ export default defineConfig({
     }),
   ],
 
+  // The browsers the standard names, from ship's browser-compat-data.
+  build: { target: ["chrome142", "edge142", "firefox153", "safari18.6", "ios18.6"] },
+
   // Oxfmt's defaults — `vp fmt` / `vp check`. The empty `svelte` block is what turns on
   // .svelte formatting.
   fmt: {
