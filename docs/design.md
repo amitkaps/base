@@ -3,9 +3,7 @@ title: Design
 summary: "Every piece in the starter, and why it was chosen."
 ---
 
-An opinionated, kept-current base for SvelteKit apps on Cloudflare Workers. Two
-config files carry the weight: **`vite.config.ts`** (dev + toolchain) and
-**`wrangler.toml`** (deploy).
+An opinionated, kept-current base for SvelteKit apps on Cloudflare Workers. Two config files carry the weight: **`vite.config.ts`** (dev + toolchain) and **`wrangler.toml`** (deploy).
 
 ## What's in it
 
@@ -21,8 +19,7 @@ config files carry the weight: **`vite.config.ts`** (dev + toolchain) and
 | CI         | GitHub Actions                 | Checks on every PR and push to `main`          |
 | CD         | Workers Builds (Git)           | Deploys `main`, previews other branches        |
 
-No UI library is bundled — add the one you want (Bits UI, Melt, your own) when
-you need it.
+No UI library is bundled — add the one you want (Bits UI, Melt, your own) when you need it.
 
 ## Seven commands
 
@@ -37,11 +34,7 @@ you need it.
 | `pnpm verify`  | `check` + `test` + `build`: what CI and every deploy run    |
 | `pnpm ship`    | `wrangler deploy` of the last build (normally left to CD)   |
 
-`pnpm check` runs `vp check`, then `svelte-check`. `vp check` formats, lints
-and type-checks the `.ts` and `.js`, from the `fmt` and `lint` blocks of
-`vite.config.ts`. `svelte-check` adds the `.svelte` types and the template and
-a11y diagnostics. Before both, `svelte-kit sync` and `wrangler types` write the
-generated types they read.
+`pnpm check` runs `vp check`, then `svelte-check`. `vp check` formats, lints and type-checks the `.ts` and `.js`, from the `fmt` and `lint` blocks of `vite.config.ts`. `svelte-check` adds the `.svelte` types and the template and a11y diagnostics. Before both, `svelte-kit sync` and `wrangler types` write the generated types they read.
 
 Escape hatches, when you want them directly:
 
@@ -50,9 +43,7 @@ pnpm exec vp lint          # lint alone
 pnpm exec vp test          # watch mode
 ```
 
-`prepare` (on every `pnpm install`) runs `svelte-kit sync` and `wrangler types`,
-so a fresh clone typechecks with no extra step. `worker-configuration.d.ts` is
-generated, not committed.
+`prepare` (on every `pnpm install`) runs `svelte-kit sync` and `wrangler types`, so a fresh clone typechecks with no extra step. `worker-configuration.d.ts` is generated, not committed.
 
 ## Layout
 
@@ -71,9 +62,6 @@ vite.config.ts             SvelteKit, format, lint and test config
 wrangler.toml              Cloudflare deploy config
 ```
 
-Import helpers, schemas and docs from `#lib`; components and assets directly as
-`#lib/components/X.svelte` (see `package.json` `imports`).
+Import helpers, schemas and docs from `#lib`; components and assets directly as `#lib/components/X.svelte` (see `package.json` `imports`).
 
-SvelteKit 3 and the Oxc tools move fast, so this repo tracks their releases
-closely — see `upgrade.md` (`/docs/upgrade.md`) for the rhythm, and `setup.md`
-(`/docs/setup.md`) for the supply-chain settings a real project should tighten.
+SvelteKit 3 and the Oxc tools move fast, so this repo tracks their releases closely — see `upgrade.md` (`/docs/upgrade.md`) for the rhythm, and `setup.md` (`/docs/setup.md`) for the supply-chain settings a real project should tighten.
