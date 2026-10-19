@@ -2,10 +2,12 @@
  * # Build config
  *
  * One [`vite-plus`](https://vite-plus.dev) config drives dev, build, format, lint and test.
- * `vp <command>` in `package.json` reads whichever section it needs. base follows the standard at
- * [ship](https://ship.amitkaps.com), so its toolchain is the one every repository shares.
+ * `vp <command>` in `package.json` reads whichever section it needs. base follows
+ * [craftz's rules](https://craftz.amitkaps.com/docs/rules.md), and `craftz()` sets the format and
+ * lint rules every repository shares.
  */
 import { defineConfig } from "vite-plus";
+import { craftz } from "@amitkaps/craftz";
 import adapter from "@sveltejs/adapter-cloudflare";
 import { sveltekit } from "@sveltejs/kit/vite";
 
@@ -13,6 +15,7 @@ const generated = [".svelte-kit/**", "build/**", "worker-configuration.d.ts"];
 
 export default defineConfig({
   plugins: [
+    craftz(),
     sveltekit({
       // SvelteKit 3 takes these options flat — not under a `kit` key.
       prerender: {
@@ -34,21 +37,15 @@ export default defineConfig({
     }),
   ],
 
-  // The browsers the standard names, from ship's browser-compat-data.
+  // The browsers craftz's rules name.
   build: { target: ["chrome142", "edge142", "firefox153", "safari18.6", "ios18.6"] },
 
-  // Oxfmt's defaults, with each paragraph on one line — `vp fmt` / `vp check`. The empty `svelte` block is what turns on
-  // .svelte formatting.
-  fmt: { proseWrap: "never", svelte: {}, ignorePatterns: generated },
+  // Oxfmt — `vp check`. The empty `svelte` block is what turns on .svelte formatting.
+  fmt: { svelte: {}, ignorePatterns: generated },
 
-  // Oxlint — `vp lint` / `vp check`. It lints .ts and .js; `.svelte` types and a11y come
-  // from `svelte-check`, which `pnpm check` runs after it.
-  lint: {
-    plugins: ["typescript", "unicorn", "import"],
-    categories: { correctness: "error" },
-    options: { typeAware: true, typeCheck: true },
-    ignorePatterns: generated,
-  },
+  // Oxlint — `vp check`. It lints .ts and .js; `.svelte` types and a11y come from `svelte-check`,
+  // which `pnpm check` runs after it.
+  lint: { ignorePatterns: generated },
 
   // Vitest — `vp test`.
   test: {

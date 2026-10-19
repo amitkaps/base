@@ -16,12 +16,14 @@
     "fix": "vp check --fix",
     "test": "vp test --run",
     "verify": "pnpm check && pnpm prose check && pnpm test && pnpm build",
-    "ship": "wrangler deploy",
+    "ship": "craftz deploy",
     "prepare": "svelte-kit sync && wrangler types",
-    "pr": "node scripts/pr.ts",
-    "gone": "node scripts/gone.ts"
+    "pr": "craftz pr",
+    "gone": "craftz gone",
+    "craftz": "craftz"
   },
   "devDependencies": {
+    "@amitkaps/craftz": "^0.1.1",
     "@amitkaps/markz": "^0.6.0",
     "@amitkaps/prose": "^0.8.0",
     "@sveltejs/adapter-cloudflare": "^8.0.1",
