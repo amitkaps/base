@@ -31,7 +31,7 @@ const index = import.meta.glob("/docs/README.md", {
  * # The order
  *
  * The docs' order is the `nav` list in `docs/README.md`'s metadata, the one GitHub, prose and
- * ship's standard read. A doc the nav leaves out fails the build, so no page goes missing from
+ * craftz's rules read. A doc the nav leaves out fails the build, so no page goes missing from
  * the site's nav.
  */
 const nav: string[] = (() => {

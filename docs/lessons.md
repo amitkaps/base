@@ -16,7 +16,7 @@ What it actually took to wire SvelteKit 3 + Vite + Cloudflare together. Useful i
 
 ## Toolchain
 
-- **Back on Vite+, for the standard.** base left Vite+ in #25: the vite override and the switched-off peer checks cost more than one config saved, for one repository. It came back because every repository shares one toolchain, set at [ship](https://ship.amitkaps.com), so the cost is paid once and each Vite+ release moves everywhere together. The override stays, and pnpm doesn't check `vite` peer ranges.
+- **Back on Vite+, for the shared toolchain.** base left Vite+ in #25: the vite override and the switched-off peer checks cost more than one config saved, for one repository. It came back because every repository shares one toolchain, set at [craftz](https://craftz.amitkaps.com), so the cost is paid once and each Vite+ release moves everywhere together. The override stays, and pnpm doesn't check `vite` peer ranges.
 - **`check` wraps `vp check`.** `svelte-kit sync` and `wrangler types` come first, since `vp check`'s type check reads the generated `$app/tsconfig` and `worker-configuration.d.ts`. `svelte-check` comes after, since oxlint doesn't type-check `.svelte` files. `fix` is plain `vp check --fix`, as everywhere.
 - **Oxfmt formats `.svelte` from the `fmt` block.** An empty `svelte: {}` turns it on. Under Vite+ there's no `.oxfmtrc.json`.
 - **Tests import from `vite-plus/test`**, not `vitest`, which isn't a direct dependency.
