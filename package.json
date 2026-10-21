@@ -15,7 +15,7 @@
     "check": "svelte-kit sync && wrangler types && vp check && svelte-check --tsconfig ./tsconfig.json",
     "fix": "vp check --fix",
     "test": "vp test --run",
-    "verify": "pnpm check && pnpm prose check && pnpm test && pnpm build",
+    "verify": "pnpm check && pnpm prose check && pnpm craftz check && pnpm test && pnpm build",
     "ship": "craftz deploy",
     "prepare": "svelte-kit sync && wrangler types",
     "pr": "craftz pr",
@@ -23,7 +23,7 @@
     "craftz": "craftz"
   },
   "devDependencies": {
-    "@amitkaps/craftz": "^0.1.2",
+    "@amitkaps/craftz": "^0.3.0",
     "@amitkaps/markz": "^0.6.0",
     "@amitkaps/prose": "^0.8.0",
     "@sveltejs/adapter-cloudflare": "^8.0.1",
