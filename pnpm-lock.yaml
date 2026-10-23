@@ -170,8 +170,8 @@ importers:
   .:
     devDependencies:
       '@amitkaps/craftz':
-        specifier: 0.4.0
-        version: 0.4.0(vite-plus@1.3.0(@types/node@26.6.5)(@vitest/ui@5.0.5)(esbuild@0.28.2)(svelte@5.57.2)(typescript@6.0.3))
+        specifier: 0.5.0
+        version: 0.5.0(vite-plus@1.3.0(@types/node@26.6.5)(@vitest/ui@5.0.5)(esbuild@0.28.2)(svelte@5.57.2)(typescript@6.0.3))
       '@amitkaps/markz':
         specifier: 0.7.0
         version: 0.7.0
@@ -208,8 +208,8 @@ importers:
 
 packages:
 
-  '@amitkaps/craftz@0.4.0':
-    resolution: {integrity: sha512-0w79Thu6xMBgLxNAQlfkgDPtPMI+D6WG1Bf0OJ0efsKhz45jhpUGg/gf0trGh2/Q9ywc1lRQw+Lm6BIQIPYL1Q==}
+  '@amitkaps/craftz@0.5.0':
+    resolution: {integrity: sha512-FaoEdQ3FbUg0Yodf4/m8nA/sPiB99jSwFjTUOGJeshZkKSBmGnVtDEIjF5VHYzU2/djjjTwfhjKl6oQxXtaL4A==}
     engines: {node: '>=26.12.1'}
     hasBin: true
     peerDependencies:
@@ -1756,7 +1756,7 @@ packages:
 
 snapshots:
 
-  '@amitkaps/craftz@0.4.0(vite-plus@1.3.0(@types/node@26.6.5)(@vitest/ui@5.0.5)(esbuild@0.28.2)(svelte@5.57.2)(typescript@6.0.3))':
+  '@amitkaps/craftz@0.5.0(vite-plus@1.3.0(@types/node@26.6.5)(@vitest/ui@5.0.5)(esbuild@0.28.2)(svelte@5.57.2)(typescript@6.0.3))':
     dependencies:
       vite-plus: 1.3.0(@types/node@26.6.5)(@vitest/ui@5.0.5)(esbuild@0.28.2)(svelte@5.57.2)(typescript@6.0.3)
 

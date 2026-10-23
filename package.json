@@ -23,7 +23,7 @@
     "craftz": "craftz"
   },
   "devDependencies": {
-    "@amitkaps/craftz": "0.4.0",
+    "@amitkaps/craftz": "0.5.0",
     "@amitkaps/markz": "0.7.0",
     "@amitkaps/prose": "0.8.0",
     "@sveltejs/adapter-cloudflare": "^8.0.1",
