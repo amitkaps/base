@@ -1,19 +1,17 @@
 /** @prose
- * # Content loading
+ * # The docs as pages
  *
- * Reads every Markdown file under `docs/`, validates its metadata, and renders it to
- * HTML with [markz](https://markz.amitkaps.com) — all at build time, so the rendered site never
- * ships a Markdown parser to the client or the Worker. Each exported [`Doc`](#frontmatter-schema) is one page:
- * adding a page is adding a file and listing it in `docs/README.md`'s `nav`, since the slug
- * comes from the filename, the order from the nav, and everything else from its metadata block.
- * `docs/README.md` is the docs' index, not a page.
+ * Each file in `docs/` is a page, rendered with [markz](https://markz.amitkaps.com) at build
+ * time. So the site ships no Markdown parser, to the browser or the Worker.
+ *
+ * Adding a page is adding a file and listing it in the nav. Its slug comes from its name, its
+ * place from the nav, and the rest from its metadata. `docs/README.md` is the index, not a page.
  */
 import { html, parse, position } from "@amitkaps/markz";
 import { z } from "zod";
 
 /** @prose
- * Every `.md` file is read and rendered eagerly (not lazily per-request), so the pages
- * stay prerenderable — `import.meta.glob`'s `eager: true` inlines the raw text at build time.
+ * Read eagerly, so every page can be prerendered.
  */
 const files = import.meta.glob(["/docs/*.md", "!/docs/README.md"], {
   query: "?raw",
@@ -43,9 +41,8 @@ const nav: string[] = (() => {
 /** @prose
  * # Frontmatter schema
  *
- * Extend this schema as pages need more fields (date, image, tags...). A file that does not
- * match fails the build with its path and the offending key — frontmatter errors are a build
- * failure, not a runtime one.
+ * Add a field here when a page needs one, like a date or an image. A file that doesn't match
+ * fails the build, so a bad metadata block never reaches a reader.
  */
 const frontmatterSchema = z.object({
   title: z.string().min(1),
@@ -60,10 +57,9 @@ export type Doc = z.infer<typeof frontmatterSchema> & {
 /** @prose
  * # Rendering a page
  *
- * Parses a raw file with markz, validates its metadata block, and renders the body — one
- * function, called once per file at module load. markz never guesses at Markdown outside its
- * dialect: it keeps the text literal and records a warning, and here any warning fails the
- * build, naming the file, line and the form to write instead.
+ * Any markz warning fails the build. markz keeps Markdown outside its dialect as literal text,
+ * so a warning means a page would show what its writer didn't mean. The error names the file,
+ * the line and the form to write instead.
  */
 function render(path: string, source: string): Doc {
   const slug = path.slice("/docs/".length, -".md".length);
@@ -113,11 +109,10 @@ const outward = (body: string): string =>
 export const renderMarkdown = (body: string): string => html(body);
 
 /** @prose
- * # Public exports
+ * # The pages
  *
- * `docs` is every page, rendered and sorted once at module load — routes read from this array
- * instead of re-rendering per request, since every route here is prerendered anyway. `getDoc`
- * looks a single page up by slug for the `docs/[slug].md` route.
+ * Rendered once, when the module loads. Every route is prerendered, so rendering again per
+ * request would only repeat the work.
  */
 export const docs: Doc[] = Object.entries(files)
   .map(([path, source]) => render(path, source))
