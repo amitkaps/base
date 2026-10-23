@@ -1,3 +1,3 @@
 # lib
 
-Everything importable through the `#lib` alias (see [`index.ts`](index.ts)). Right now that's just [`docs.ts`](docs.ts) — the content-loading pipeline for `docs/*.md` — but components and assets belong here too as the app grows, imported directly rather than through the barrel (e.g. `#lib/components/Dialog.svelte`).
+What the `#lib` alias imports ([index.ts](index.ts)). Now that's [docs.ts](docs.ts), which makes `docs/` into pages. Components and assets go here too as the app grows, imported by their own path, like `#lib/components/Dialog.svelte`, not through `index.ts`.
