@@ -7,8 +7,8 @@ base is a SvelteKit 3 starter on Vite+, deployed to a Cloudflare Worker with wra
 
 ## Next, in order
 
-1. **TypeScript 7**, when svelte-check accepts it. craftz holds `versions-typescript` until then.
-2. **cf in place of wrangler**, when SvelteKit's adapter writes cf's Build Output. craftz holds `cloudflare-config` until then.
+- [ ] **TypeScript 7**, when svelte-check accepts it. craftz holds `versions-typescript` until then.
+- [ ] **cf in place of wrangler**, when SvelteKit's adapter writes cf's Build Output. craftz holds `cloudflare-config` until then.
 
 ## Where it is
 
