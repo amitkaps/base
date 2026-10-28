@@ -7,6 +7,7 @@ base is a SvelteKit 3 starter on Vite+, deployed to a Cloudflare Worker with wra
 
 ## Next, in order
 
+- [ ] **svelte-check on TypeScript 7.** `svelte-check --tsgo` type-checks with TypeScript 7, installed as `@typescript/native@npm:typescript@7`, while `typescript` stays on 6 for SvelteKit. It halves `svelte-check`, from about 7 seconds to 3.5, and still catches a type error in a `.svelte` file and a `.ts` file. `craftz check` accepts the extra dependency. TypeScript 7 won't take a path in `types`, so `worker-configuration.d.ts` moves to `include`. That leaves the `toolchain-types` hold's reason true. `--tsgo` is new in svelte-check 4.7, so a diagnostic it misses is a reason to go back.
 - [ ] **TypeScript 7**, when svelte-check accepts it. craftz holds `versions-typescript` until then.
 - [ ] **cf in place of wrangler**, when SvelteKit's adapter writes cf's Build Output. craftz holds `cloudflare-config` until then.
 
