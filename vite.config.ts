@@ -3,8 +3,8 @@
  *
  * One [`vite-plus`](https://vite-plus.dev) config drives dev, build, format, lint and test.
  * `vp <command>` in `package.json` reads whichever section it needs. base follows
- * [craftz's rules](https://craftz.amitkaps.com/docs/rules.md), and `craftz()` sets the format and
- * lint rules every repository shares.
+ * [craftz's rules](https://craftz.amitkaps.com/docs/rules.md), and the `fmt` and `lint` blocks are
+ * written out as they say, the same in every repository.
  */
 import { defineConfig, lazyPlugins } from "vite-plus";
 
