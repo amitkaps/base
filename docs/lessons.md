@@ -40,7 +40,9 @@ What it actually took to wire SvelteKit 3 + Vite + Cloudflare together. Useful i
 
 ## TypeScript
 
-- **Stay on TypeScript 6 for now.** TypeScript 7 (the native port) removes the JS API SvelteKit 3.0.0 uses to load `tsconfig.json`: every `svelte-kit sync` fails with "Cannot read properties of undefined (reading 'readFile')". Kit's peer range is `^6`, and `svelte-check` 4.7 allows `^5 || ^6`. Move when both widen their peers.
+- **Stay on TypeScript 6 for now.** TypeScript 7, the native port, removes the JS API SvelteKit uses to load `tsconfig.json`. So every `svelte-kit sync` fails with "Cannot read properties of undefined (reading 'readFile')". Last tried with SvelteKit 3.1.0 and TypeScript 7.1.0-beta, and 7.0.2 fails the same way. Kit's peer range is `^6`, and `svelte-check` 4.7 allows `^5 || ^6`. Move when both widen their peers.
+- **TypeScript 7 can check types beside 6.** Installed as `@typescript/native@npm:typescript@7`, it leaves `typescript` on 6 for SvelteKit, and `svelte-check --tsgo` checks with it. That halves `svelte-check`, from about 7 seconds to 3.5, with 7.0.2 or 7.1.0-beta. TypeScript 7 won't take a path in `types`, so `worker-configuration.d.ts` goes in `include`.
+- **Not `--tsgo-experimental-api`.** With 7.0.2 it's no faster than `--tsgo` here, since most of the time is Node starting and Svelte files converting. With 7.1.0-beta, `svelte-check` 4.7.7 crashes on it with "Invalid filesystem callback 'directoryExists'", so one TypeScript minor broke it.
 
 ## Content
 
