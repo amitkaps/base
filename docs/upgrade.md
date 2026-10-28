@@ -7,7 +7,7 @@ summary: "Keep a fork current: bumps, smoke tests, re-syncing with upstream."
 
 ## The rhythm
 
-- **Monthly** — `pnpm outdated`; bump SvelteKit deliberately and smoke-test. Vite+ and the workflow actions aren't bumped here: they move in every repository at once, from [craftz](https://craftz.amitkaps.com), whose survey flags a repository that's behind. Vite+'s override in `pnpm-workspace.yaml` moves with it.
+- **Monthly** — run `pnpm outdated`, then bump SvelteKit deliberately and smoke-test. Vite+ and the workflow actions aren't bumped here. They move in every repository at once, from [craftz](https://craftz.amitkaps.com), whose survey flags a repository that's behind. Vite+'s override in `pnpm-workspace.yaml` moves with it.
 - **Every bump** — CI must be green before merge. Strict branch protection on `main` enforces this and auto-rebases the other open PRs after each merge.
 
 There's no Dependabot: every pull request it opened duplicated craftz's survey. A fork that doesn't follow craftz can add a `.github/dependabot.yml` of its own.
@@ -30,7 +30,7 @@ pnpm install
 pnpm verify
 ```
 
-`pnpm install` regenerates `worker-configuration.d.ts` via `prepare`, so a `wrangler` bump needs nothing extra. Workers Builds deploys on merge to `main`; confirm `base.<subdomain>.workers.dev` and the custom domain still serve.
+`pnpm install` regenerates `worker-configuration.d.ts` via `prepare`, so a `wrangler` bump needs nothing extra. Workers Builds deploys on merge to `main`, so confirm `base.<subdomain>.workers.dev` and the custom domain still serve.
 
 ## Node & pnpm
 

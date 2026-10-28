@@ -11,7 +11,7 @@
 <!-- @prose
 # Doc cards
 
-Each card links to `/docs/{slug}.md`, the doc's own path; the title and summary come straight from that page's
+Each card links to `/docs/{slug}.md`, the doc's own path. The title and summary come straight from that page's
 frontmatter, so this list never drifts from the pages it links to.
 -->
 <h1>base</h1>
