@@ -7,13 +7,11 @@
  * lint rules every repository shares.
  */
 import { defineConfig, lazyPlugins } from "vite-plus";
-import { craftz } from "@amitkaps/craftz";
 
 const generated = [".svelte-kit/**", "build/**", "worker-configuration.d.ts"];
 
 export default defineConfig({
   plugins: [
-    craftz(),
     // `vp fmt` and `vp lint` read only their own blocks, so they skip this and never import
     // SvelteKit or the adapter, which take about 2s to load.
     lazyPlugins(async () => {
@@ -50,14 +48,26 @@ export default defineConfig({
   build: { target: ["chrome142", "edge142", "firefox153", "safari18.6", "ios18.6"] },
 
   // Oxfmt — `vp check`. The empty `svelte` block is what turns on .svelte formatting.
-  fmt: { svelte: {}, ignorePatterns: generated },
+  fmt: { svelte: {}, ignorePatterns: generated, proseWrap: "never" },
 
   // Oxlint — `vp check`. It lints .ts and .js; `.svelte` types and a11y come from `svelte-check`,
   // which `pnpm check` runs after it.
-  lint: { ignorePatterns: generated },
+  lint: {
+    ignorePatterns: generated,
+    plugins: ["typescript", "unicorn", "import"],
+    categories: { correctness: "error" },
+    options: { typeAware: true, typeCheck: true },
+  },
 
   // Vitest — `vp test`.
   test: {
     expect: { requireAssertions: true },
+  },
+
+  run: {
+    cache: false,
+    tasks: {
+      all: { command: "true", dependsOn: ["check", "test", "build"] },
+    },
   },
 });
