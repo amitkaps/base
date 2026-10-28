@@ -8,7 +8,7 @@ One-time steps to turn this starter into a real project. Everything else is alre
 ## 1. Rename
 
 - `package.json` → `name`
-- `wrangler.toml` → `name` (this becomes the Workers subdomain)
+- `wrangler.toml` → `name`, which becomes the Workers subdomain
 - the docs in `docs/` (`design.md`, `setup.md`, `upgrade.md`, `plan.md`, `lessons.md`, `development.md`) — make them yours. Each carries its `title` and `summary` in frontmatter, and `docs/README.md`'s `nav` sets their order
 
 ## 2. Cloudflare
@@ -40,7 +40,7 @@ The Worker is reachable at `<name>.<your-subdomain>.workers.dev`.
 
 ## 3. Custom domain
 
-`wrangler.toml` has a `routes` entry mapping the Worker to a hostname. Point it at your domain (the zone must be on the same Cloudflare account) — Cloudflare creates the DNS record and certificate on the next deploy:
+`wrangler.toml` has a `routes` entry mapping the Worker to a hostname. Point it at your domain, whose zone must be on the same Cloudflare account. Cloudflare creates the DNS record and certificate on the next deploy:
 
 ```jsonc
 "routes": [{ "pattern": "app.example.com", "custom_domain": true }]

@@ -27,5 +27,5 @@ Every file in this repository with its summary, which `pnpm run verify` writes. 
 ## This repository
 
 - Before committing, `pnpm check` (format, lint, types and Svelte diagnostics) and `pnpm test` must pass. After a dependency bump, run `pnpm build` too.
-- The files in `docs/` are the site's pages _and_ its docs, in the order `docs/README.md`'s `nav` lists them. Update the doc, not a separate copy. Each fact lives in exactly one of them: `design.md` (what's here), `setup.md` (one-time setup), `upgrade.md` (keeping current), `plan.md` (what's next), `lessons.md` (gotchas) and `development.md` (working on base itself).
+- The files in `docs/` are the site's pages _and_ its docs, in the order `docs/README.md`'s `nav` lists them. Update the doc, not a separate copy. Each fact lives in exactly one of them. `design.md` says what's here, `setup.md` the one-time setup, `upgrade.md` how to keep current, `plan.md` what's next, `lessons.md` the gotchas, and `development.md` how to work on base itself.
 - `pnpm prose` reads the repository as a document. It's read-only, and opens the browser.

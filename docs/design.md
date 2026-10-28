@@ -62,6 +62,6 @@ vite.config.ts             SvelteKit, format, lint and test config
 wrangler.toml              Cloudflare deploy config
 ```
 
-Import helpers, schemas and docs from `#lib`; components and assets directly as `#lib/components/X.svelte` (see `package.json` `imports`).
+Import helpers, schemas and docs from `#lib`. Import components and assets by their own path, like `#lib/components/X.svelte`, which `imports` in `package.json` maps.
 
 SvelteKit 3 and the Oxc tools move fast, so this repo tracks their releases closely — see `upgrade.md` (`/docs/upgrade.md`) for the rhythm, and `setup.md` (`/docs/setup.md`) for the supply-chain settings a real project should tighten.
