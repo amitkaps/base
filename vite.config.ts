@@ -21,6 +21,9 @@ export default defineConfig({
       ]);
       return [
         sveltekit({
+          // `build` and `preview` keep their generated files apart from `check`'s, so the two can
+          // run side by side ([craftz's rule](https://craftz.amitkaps.com/docs/rules.md#scripts-sveltekit)).
+          outDir: process.env.SVELTEKIT_OUT_DIR ?? ".svelte-kit",
           // SvelteKit 3 takes these options flat — not under a `kit` key.
           prerender: {
             // Prerendering follows every internal link, so a strict handler
