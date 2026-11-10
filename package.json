@@ -10,8 +10,8 @@
   "scripts": {
     "dev": "vp dev",
     "prose": "prose",
-    "build": "vp build",
-    "preview": "vp preview",
+    "build": "SVELTEKIT_OUT_DIR=.svelte-kit/build vp build",
+    "preview": "SVELTEKIT_OUT_DIR=.svelte-kit/build vp preview",
     "check": "svelte-kit sync && wrangler types && vp check && rm -rf .svelte-kit/.svelte-check && svelte-check --tsgo --tsconfig ./tsconfig.json && pnpm prose check && pnpm craftz check",
     "fix": "vp check --fix",
     "test": "vp test --run",
@@ -24,7 +24,7 @@
     "outline": "prose outline"
   },
   "devDependencies": {
-    "@amitkaps/craftz": "0.22.0",
+    "@amitkaps/craftz": "0.23.0",
     "@amitkaps/markz": "0.9.0",
     "@amitkaps/prose": "0.12.0",
     "@sveltejs/adapter-cloudflare": "^8.0.2",
@@ -34,8 +34,8 @@
     "svelte": "^5.57.3",
     "svelte-check": "^4.7.8",
     "typescript": "^6.0.3",
-    "vite-plus": "1.5.0",
-    "wrangler": "4.158.0",
+    "vite-plus": "1.5.1",
+    "wrangler": "4.159.0",
     "zod": "^4.6.7"
   },
   "devEngines": {
