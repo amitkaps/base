@@ -48,7 +48,7 @@ export default defineConfig({
   ],
 
   // The browsers craftz's rules name.
-  build: { target: ["chrome143", "edge143", "firefox153", "safari18.6", "ios18.6"] },
+  build: { target: ["chrome148", "edge148", "firefox153", "safari18.6", "ios18.6"] },
 
   // Oxfmt — `vp check`. The empty `svelte` block is what turns on .svelte formatting.
   fmt: { svelte: {}, ignorePatterns: generated, proseWrap: "never" },
@@ -69,9 +69,17 @@ export default defineConfig({
   },
 
   run: {
-    cache: false,
+    cache: { scripts: false, tasks: true },
     tasks: {
-      all: { command: "true", dependsOn: ["check", "test", "build"] },
+      all: { command: "true", dependsOn: ["check", "tested", "built"], cache: false },
+      tested: {
+        command: "pnpm run test",
+        cache: { input: [{ auto: true }, "!dist/**", "!.svelte-kit/**", "!node_modules/$app/**"] },
+      },
+      built: {
+        command: "pnpm run build",
+        cache: { input: [{ auto: true }, "!.svelte-kit/**", "!node_modules/$app/**"] },
+      },
     },
   },
 });
