@@ -24,24 +24,24 @@
     "outline": "prose outline"
   },
   "devDependencies": {
-    "@amitkaps/craftz": "0.26.0",
+    "@amitkaps/craftz": "0.27.0",
     "@amitkaps/markz": "0.9.0",
-    "@amitkaps/prose": "0.12.0",
+    "@amitkaps/prose": "0.13.0",
     "@sveltejs/adapter-cloudflare": "^8.0.2",
-    "@sveltejs/kit": "^3.2.0",
+    "@sveltejs/kit": "^3.4.0",
     "@types/node": "26.6.6",
     "@typescript/native": "npm:typescript@7",
-    "svelte": "^5.57.3",
+    "svelte": "^5.58.0",
     "svelte-check": "^4.7.8",
     "typescript": "^6.0.3",
     "vite-plus": "1.7.0",
-    "wrangler": "4.163.0",
+    "wrangler": "4.165.0",
     "zod": "^4.6.7"
   },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "12.19.0",
+      "version": "12.21.0",
       "onFail": "download"
     },
     "runtime": {
@@ -53,12 +53,12 @@
   "engines": {
     "node": ">=26.13.1"
   },
-  "packageManager": "pnpm@12.19.0",
+  "packageManager": "pnpm@12.21.0",
   "craftz": {
     "hold": {
-      "versions-typescript": "svelte-check accepts TypeScript 5 and 6 only. Move when its peer range takes 7.",
+      "tools-typescript": "svelte-check accepts TypeScript 5 and 6 only. Move when its peer range takes 7.",
       "cloudflare-config": "cf can't deploy SvelteKit, since the adapter doesn't write cf's Build Output. Move when it does.",
-      "toolchain-types": "SvelteKit needs $app/types in types, and checkJs off, or svelte-check reads the Worker wrangler builds. Move when either changes."
+      "tools-tsconfig": "SvelteKit needs $app/types in types, and checkJs off, or svelte-check reads the Worker wrangler builds. Move when either changes."
     }
   }
 }
