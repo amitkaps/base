@@ -13,17 +13,17 @@ import { z } from "zod";
 /** @prose
  * Read eagerly, so every page can be prerendered.
  */
-const files = import.meta.glob(["/docs/*.md", "!/docs/README.md"], {
+const files = import.meta.glob<string>(["/docs/*.md", "!/docs/README.md"], {
   query: "?raw",
   import: "default",
   eager: true,
-}) as Record<string, string>;
+});
 
-const index = import.meta.glob("/docs/README.md", {
+const index = import.meta.glob<string>("/docs/README.md", {
   query: "?raw",
   import: "default",
   eager: true,
-}) as Record<string, string>;
+});
 
 /** @prose
  * # The order

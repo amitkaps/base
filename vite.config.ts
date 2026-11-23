@@ -60,7 +60,37 @@ export default defineConfig({
     plugins: ["typescript", "unicorn", "import"],
     categories: { correctness: "error" },
     options: { typeAware: true, typeCheck: true },
-    rules: { "no-empty": "error" },
+    // Beyond correctness, rules that caught real code in a trial across craftz, prose, markz and a
+    // private application: dead conditions and casts, leftover empty imports, and promises
+    // nobody awaits. The rules after `restrict-template-expressions` went on once no file broke
+    // them: a thrown string, an unbound method, a `+` on an object, or an `any` returned or passed on.
+    // The promise rules read `.ts` files, since type-aware rules don't run in a `.svelte` script.
+    rules: {
+      "no-empty": "error",
+      "no-case-declarations": "error",
+      "import/no-empty-named-blocks": "error",
+      "typescript/no-unnecessary-type-assertion": "error",
+      "typescript/no-unnecessary-condition": "error",
+      "typescript/no-floating-promises": "error",
+      "typescript/no-misused-promises": "error",
+      "typescript/await-thenable": "error",
+      "typescript/no-base-to-string": "error",
+      "typescript/no-deprecated": "error",
+      "typescript/require-array-sort-compare": "error",
+      "typescript/restrict-template-expressions": "error",
+      "typescript/no-unsafe-enum-comparison": "error",
+      "typescript/only-throw-error": "error",
+      "typescript/no-redundant-type-constituents": "error",
+      "typescript/restrict-plus-operands": "error",
+      "typescript/unbound-method": "error",
+      "typescript/prefer-promise-reject-errors": "error",
+      "typescript/no-unsafe-function-type": "error",
+      "typescript/no-misused-spread": "error",
+      "typescript/no-explicit-any": "error",
+      "typescript/no-unsafe-return": "error",
+      "typescript/no-unsafe-argument": "error",
+      "typescript/use-unknown-in-catch-callback-variable": "error",
+    },
   },
 
   // Vitest — `vp test`.
