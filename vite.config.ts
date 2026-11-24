@@ -96,6 +96,7 @@ export default defineConfig({
   // Vitest — `vp test`.
   test: {
     expect: { requireAssertions: true },
+    exclude: ["**/node_modules/**", "**/.git/**", ".claude/worktrees/**"],
   },
 
   run: {
