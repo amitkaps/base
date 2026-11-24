@@ -27,7 +27,7 @@
     "@amitkaps/craftz": "0.30.0",
     "@amitkaps/markz": "0.10.0",
     "@amitkaps/prose": "0.14.1",
-    "@sveltejs/adapter-cloudflare": "^8.0.2",
+    "@sveltejs/adapter-cloudflare": "^9.0.0",
     "@sveltejs/kit": "^3.4.0",
     "@types/node": "26.6.6",
     "@typescript/native": "npm:typescript@7",
