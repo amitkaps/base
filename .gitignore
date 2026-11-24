@@ -32,3 +32,6 @@ worker-configuration.d.ts
 
 # Written by prose outline
 outline.md
+
+# Agents' worktrees
+.claude/worktrees
