@@ -11,7 +11,6 @@
 name = "base"
 compatibility_date = "2026-09-09"
 compatibility_flags = ["nodejs_als"]
-main = ".svelte-kit/cloudflare/_worker.js"
 workers_dev = true
 preview_urls = true
 routes = [{ pattern = "base.amitkaps.com", custom_domain = true }]
