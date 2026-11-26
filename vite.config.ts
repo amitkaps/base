@@ -21,6 +21,16 @@ export default defineConfig({
       ]);
       return [
         sveltekit({
+          // oxlint-disable-next-line typescript/no-deprecated -- the one way to give every task the same tsconfig
+          typescript: {
+            config: (config: Record<string, object>) => ({
+              ...config,
+              compilerOptions: {
+                ...config["compilerOptions"],
+                rootDirs: ["../..", "../../.svelte-kit/types"],
+              },
+            }),
+          },
           // `build` and `preview` keep their generated files apart from `check`'s, so the two can
           // run side by side ([craftz's rule](https://craftz.amitkaps.com/docs/rules.md#scripts-sveltekit)).
           outDir: process.env.SVELTEKIT_OUT_DIR ?? ".svelte-kit",
